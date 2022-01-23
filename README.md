@@ -32,6 +32,10 @@
 - `git fetch --prune`
 - `git rebase origin/main`
 
+## Reboot and shutdown
+- `sudo reboot`
+- `sudo shutdown -r now`
+
 ## To clone stacker-bot
 
 
