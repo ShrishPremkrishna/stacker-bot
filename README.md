@@ -6,7 +6,8 @@
 
 ### Shrish pi
 - Turn on the raspberry pi
-- `ping shrishraspberrypi.local`
+- `ping shrishraspberrypi.local` 
+- ctrl+c to stop ping
 - `ssh pi@shrishraspberrypi.local` `shrishraspberry`
 
 ### Quest pi
