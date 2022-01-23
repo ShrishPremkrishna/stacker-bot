@@ -8,7 +8,9 @@
 - Turn on the raspberry pi
 - `ping shrishraspberrypi.local` 
 - ctrl+c to stop ping
-- `ssh pi@shrishraspberrypi.local` `shrishraspberry`
+- `ssh pi@shrishraspberrypi.local` 
+- Add to list of known hosts
+- `shrishraspberry`
 
 ### Quest pi
 - `ping questraspberrypi.local`
@@ -23,8 +25,7 @@
 - `cd pi-roboclaw-motor-controller`
 
 ## To run python files
-- `cd robotics/pi-roboclaw-motor-controller/roboclaw_packet_serial`
-- `python3 packet_serial.py`
+- `cd roboclaw_packet_serial`
 - `python3 testMiniUART.py`
 
 ## To fetch latest code from Github
