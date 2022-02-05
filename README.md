@@ -24,7 +24,8 @@
 - `git clone https://github.com/ShrishPremkrishna/pi-roboclaw-motor-controller.git`
 - `cd pi-roboclaw-motor-controller`
 
-## To run python files
+## Test files to run
+- Switch on roboclaw
 - `cd roboclaw_packet_serial`
 - `python3 testMiniUART.py`
 

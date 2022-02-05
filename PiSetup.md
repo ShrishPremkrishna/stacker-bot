@@ -9,7 +9,9 @@
 8. Change PI host name -  menu -> preferences -> pi configuration
 9. Restart
 10. connect and verify via ssh
-
+11. If you get `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`
+    - Open `.ssh/known_hosts` file in an editor
+    - Delete the offending line denoted on the error message
 ## miniUART setup
 [Reference] - https://www.circuits.dk/setup-raspberry-pi-3-gpio-uart/
 1. `sudo nano /boot/config.txt`
