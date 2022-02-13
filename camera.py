@@ -25,6 +25,7 @@ class VideoCamera(object):
 
     def get_frame(self):
         ret, img = self.camera.read()
+        print(img.shape)
         features, cropped = self.runner.get_features_from_image(img)
         res = self.runner.classify(features)
         print(res)
