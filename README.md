@@ -6,15 +6,10 @@
 
 ### Shrish pi
 - Turn on the raspberry pi
-- `ping shrishraspberrypi.local` 
+- `ping raspberrypi.local` 
 - ctrl+c to stop ping
-- `ssh pi@shrishraspberrypi.local` 
+- `ssh pi@raspberrypi.local` 
 - Add to list of known hosts
-- `shrishraspberry`
-
-### Quest pi
-- `ping questraspberrypi.local`
-- `ssh pi@questraspberrypi.local` `questraspberry`
 
 ## To clone a github repo
 - Create Robotics folder
