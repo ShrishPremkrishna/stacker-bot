@@ -20,14 +20,14 @@ class VideoCamera(object):
         self.labels = model_info['model_parameters']['labels']
         self.camera = cv2.VideoCapture(0)
         
-        self.cam_pulse = 2300
+        self.cam_pulse = 1600
         self.cam_channel = 4
-        self.cam_max = 2300
+        self.cam_max = 2000
         self.cam_min = 1600
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
-        self.pwm.setPWM(self.cam_channel, 0, self.cam_max)
-        self.pwm.setPWM(self.cam_channel, 0, 4096)
+        self.pwm.setPWM(self.cam_channel, 0, self.cam_min)
+        # self.pwm.setPWM(self.cam_channel, 0, 4096)
 
         self.speed = 20
         self.Lspeed = 35
@@ -55,16 +55,7 @@ class VideoCamera(object):
 
     def raise_camera(self):
         print("raise_camera")
-        print("Cam pulse at - " + str(self.cam_pulse))
-        if (self.cam_pulse > self.cam_min) :
-            print("Cam pulse being set at - " + str(self.cam_pulse))
-            for i in range(self.cam_pulse, self.cam_pulse - 100, -10):  
-                self.pwm.setServoPulse(self.cam_channel, i)   
-                time.sleep(0.02) 
-            self.cam_pulse = self.cam_pulse - 100
-            return True
-        else:
-            return False
+
 
     def move_chassis_up(self):
         self.roboclaw.BackwardM1(0x80,self.speed)
@@ -107,18 +98,20 @@ class VideoCamera(object):
         print(res)
         cropped = self.scalein_crop_img(img)
         logList = []
+        shoe_found = False
 
 
         if "bounding_boxes" in res["result"].keys():
             print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
             for bb in res["result"]["bounding_boxes"]:
                 if (bb['label'] == 'shoe'):
+                    shoe_found = True
                     logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
                     cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
                     cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
                     
                     if(bb['y'] > 50):
-                        if (self.cam_pulse > self.cam_min):
+                        if (self.cam_pulse < self.cam_max):
                             self.lower_camera()
                             logList.append("Lower camera angle")
                         else:
@@ -128,6 +121,13 @@ class VideoCamera(object):
                         logList.append("Moving chassis up")
                     break
         
+        if (not shoe_found):
+            if (self.cam_pulse < self.cam_max):
+                self.lower_camera()
+                logList.append("Lower camera angle")
+            else:
+                logList.append("Proximity Reached")
+
         logs = np.full((800,800,3), 200, dtype=np.uint8)
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
