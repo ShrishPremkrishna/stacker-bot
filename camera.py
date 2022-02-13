@@ -3,16 +3,16 @@ import time
 from edge_impulse_linux.image import ImageImpulseRunner
 import os
 
-runner = None
-model = 'obj-det.eim'
-dir_path = os.path.dirname(os.path.realpath(__file__))
-modelfile = os.path.join(dir_path, model)
-print('MODEL: ' + modelfile)
+
 
 class VideoCamera(object):
     def __init__(self):
+        model = 'obj-det.eim'
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        modelfile = os.path.join(dir_path, model)
+        print('MODEL: ' + modelfile)
         self.runner = ImageImpulseRunner(modelfile)
-        model_info = runner.init()
+        model_info = self.runner.init()
         print('Loaded runner for "' + model_info['project']['owner'] + ' / ' + model_info['project']['name'] + '"')
         self.labels = model_info['model_parameters']['labels']
         self.camera = cv2.VideoCapture(0)
@@ -24,7 +24,7 @@ class VideoCamera(object):
             self.runner.stop()
 
     def get_frame(self):
-        res, img = runner.classifier(0)
+        res, img = self.runner.classifier(0)
 
         # if "classification" in res["result"].keys():
         #     print('Result (%d ms.) ' % (res['timing']['dsp'] + res['timing']['classification']), end='')
