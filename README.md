@@ -24,6 +24,9 @@
 - `git clone https://github.com/ShrishPremkrishna/pi-roboclaw-motor-controller.git`
 - `cd pi-roboclaw-motor-controller`
 - pip3 install pyPS4Controller
+- `git clone https://github.com/ShrishPremkrishna/stacker-bot.git`
+- `cd stacker-bot`
+- `python3 main.py`
 
 ## Useful links 
 - https://singleboardbytes.com/647/install-opencv-raspberry-pi-4.htm
