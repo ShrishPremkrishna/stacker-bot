@@ -4,7 +4,6 @@ from edge_impulse_linux.image import ImageImpulseRunner
 
 runner = None
 model = 'obj-det.eim'
-pi_camera = VideoCamera() 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 modelfile = os.path.join(dir_path, model)
 print('MODEL: ' + modelfile)
