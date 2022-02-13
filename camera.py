@@ -56,7 +56,7 @@ class VideoCamera(object):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
         logs = np.full((800,800,3), 200, dtype=np.uint8)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-        for i, log in logList:
+        for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         # print(cropped.shape)
         # print(logs.shape)
