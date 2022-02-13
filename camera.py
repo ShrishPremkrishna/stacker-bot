@@ -33,7 +33,7 @@ class VideoCamera(object):
         return resized[0:320, 51:371]
 
     def scaleout(self, img):
-        scale_percent = 200
+        scale_percent = 250
         width = int(img.shape[1] * scale_percent / 100)
         height = int(img.shape[0] * scale_percent / 100)
         dim = (width, height)
@@ -46,7 +46,7 @@ class VideoCamera(object):
         res = self.runner.classify(features)
         print(res)
         cropped = self.scalein_crop_img(img)
-        # print(cropped.shape)
+        logtext
 
 
         if "bounding_boxes" in res["result"].keys():
@@ -57,9 +57,9 @@ class VideoCamera(object):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
                 # else:
                     # print('\tNO SHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
-        logs = np.full((640,640,3), 200, dtype=np.uint8)
+        logs = np.full((800,800,3), 200, dtype=np.uint8)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-        cv2.putText(logs, str(res), (10,10), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
+        cv2.putText(logs, str(res), (10, 10), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         # print(cropped.shape)
         # print(logs.shape)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
