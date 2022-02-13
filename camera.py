@@ -24,7 +24,7 @@ class VideoCamera(object):
         if (self.runner):
             self.runner.stop()
 
-    def scale_crop_img(img):
+    def scale_crop_img(self, img):
         scale_percent = 66 
         width = int(img.shape[1] * scale_percent / 100)
         height = int(img.shape[0] * scale_percent / 100)
