@@ -3,6 +3,8 @@ import time
 from edge_impulse_linux.image import ImageImpulseRunner
 import os
 import numpy as np
+from PCA9685 import PCA9685
+from roboclaw import Roboclaw
 
 
 
@@ -17,6 +19,62 @@ class VideoCamera(object):
         print('Loaded runner for "' + model_info['project']['owner'] + ' / ' + model_info['project']['name'] + '"')
         self.labels = model_info['model_parameters']['labels']
         self.camera = cv2.VideoCapture(0)
+        
+        self.cam_pulse = 2300
+        self.cam_channel = 4
+        self.cam_max = 2300
+        self.cam_min = 1600
+        self.pwm = PCA9685(0x40, debug=False)
+        self.pwm.setPWMFreq(50)
+        self.pwm.setPWM(self.cam_channel, 0, self.cam_max)
+
+        self.speed = 20
+        self.Lspeed = 35
+        self.address = 0x80
+        self.roboclaw = Roboclaw("/dev/serial0", 38400)
+        result = self.roboclaw.Open()
+        if result == 0:
+            print('Unable to open port')
+        print('Printing connection result - ' + str(result))
+        print('Connection - ' + str(self.roboclaw._port.is_open))
+
+
+    def lower_camera(self):
+        print("lower_camera")
+        print("Cam pulse at - " + str(self.cam_pulse))
+        if (self.cam_pulse < self.cam_max) :
+            for i in range(self.cam_pulse, self.cam_pulse + 100, 10):  
+                self.pwm.setServoPulse(self.cam_channel, i)   
+                time.sleep(0.02) 
+            print("Cam pulse being set at - " + str(self.cam_pulse))
+            self.cam_pulse = self.cam_pulse + 100 
+            return True
+        else:
+            return False
+
+    def raise_camera(self):
+        print("raise_camera")
+        print("Cam pulse at - " + str(self.cam_pulse))
+        if (self.cam_pulse > self.cam_min) :
+            print("Cam pulse being set at - " + str(self.cam_pulse))
+            for i in range(self.cam_pulse, self.cam_pulse - 100, -10):  
+                self.pwm.setServoPulse(self.cam_channel, i)   
+                time.sleep(0.02) 
+            self.cam_pulse = self.cam_pulse - 100
+            return True
+        else:
+            return False
+
+    def move_chassis_up(self):
+        self.roboclaw.BackwardM1(0x80,self.speed)
+        self.roboclaw.BackwardM2(0x80,self.speed)
+        self.roboclaw.BackwardM1(0x81,self.speed)
+        self.roboclaw.BackwardM2(0x81,self.speed)
+        time.sleep(.5)
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
 
     def __del__(self):
         self.camera.release()
@@ -57,6 +115,16 @@ class VideoCamera(object):
                     logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
                     cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
                     cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+                    
+                    if(bb['y'] > 50):
+                        if (self.cam_pulse > self.cam_min):
+                            self.lower_camera()
+                            logList.append("Lower camera angle")
+                        else:
+                            logList.append("Proximity Reached")
+                    else:
+                        self.move_chassis_up()
+                        logList.append("Moving chassis up")
                     break
         
         logs = np.full((800,800,3), 200, dtype=np.uint8)
