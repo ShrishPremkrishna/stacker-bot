@@ -24,6 +24,7 @@ class VideoCamera(object):
             self.runner.stop()
 
     def get_frame(self):
+        time.sleep(0.1)
         ret, img = self.camera.read()
         print(img.shape)
         features, cropped = self.runner.get_features_from_image(img)
@@ -44,9 +45,11 @@ class VideoCamera(object):
         if "bounding_boxes" in res["result"].keys():
             print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
             for bb in res["result"]["bounding_boxes"]:
-                print('\t%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
-                img = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-
+                if (bb['value'] > 0.8):
+                    print('\tSHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
+                    img = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
+                else:
+                    print('\tNO SHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
         # ret, jpeg = cv2.imencode('.jpg', cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
         ret, jpeg = cv2.imencode('.jpg', img)
         return jpeg.tobytes()
