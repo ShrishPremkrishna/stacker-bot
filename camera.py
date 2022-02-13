@@ -27,6 +27,7 @@ class VideoCamera(object):
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
         self.pwm.setPWM(self.cam_channel, 0, self.cam_max)
+        self.pwm.setPWM(self.cam_channel, 0, 4096)
 
         self.speed = 20
         self.Lspeed = 35
