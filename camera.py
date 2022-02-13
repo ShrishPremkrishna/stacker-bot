@@ -1,6 +1,7 @@
 import cv2
 import time
 from edge_impulse_linux.image import ImageImpulseRunner
+import os
 
 runner = None
 model = 'obj-det.eim'
