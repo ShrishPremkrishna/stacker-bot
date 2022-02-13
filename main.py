@@ -9,14 +9,14 @@ import time
 import threading
 import os
 
-pi_camera = VideoCamera() # flip pi camera if upside down.
+pi_camera = VideoCamera() 
 
 # App Globals (do not edit)
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html') #you can customze index.html here
+    return render_template('index.html') 
 
 def gen(camera):
     #get camera frame
@@ -28,7 +28,7 @@ def gen(camera):
 @app.route('/video_feed')
 def video_feed():
     return Response(gen(pi_camera),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+                    mimetype='multipart/x-mixed-replace')
 
 if __name__ == '__main__':
 
