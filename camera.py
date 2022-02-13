@@ -50,9 +50,9 @@ class VideoCamera(object):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
                 # else:
                     # print('\tNO SHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
-        logs = np.full((320,320,3), 256, dtype=np.uint8)
+        logs = np.full((320,320,3), 200, dtype=np.uint8)
         print(cropped.shape)
         print(logs.shape)
-        canvas = np.concatenate((cropped, logs), axis=0)
+        canvas = np.concatenate((cropped, logs), axis=1)
         ret, jpeg = cv2.imencode('.jpg', canvas)
         return jpeg.tobytes()
