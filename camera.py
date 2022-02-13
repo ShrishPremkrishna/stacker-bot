@@ -30,7 +30,7 @@ class VideoCamera(object):
         res = self.runner.classify(features)
         print(res)
 
-        scale_percent = 60 
+        scale_percent = 66 
         width = int(img.shape[1] * scale_percent / 100)
         height = int(img.shape[0] * scale_percent / 100)
         dim = (width, height)
@@ -38,7 +38,7 @@ class VideoCamera(object):
         # resize image
         resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
         print(resized.shape)
-        cropped = resized[0:320, 32:352]
+        cropped = resized[0:320, 51:372]
         print(cropped.shape)
 
         if "bounding_boxes" in res["result"].keys():
