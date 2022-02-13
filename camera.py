@@ -26,7 +26,8 @@ class VideoCamera(object):
     def get_frame(self):
         ret, img = self.camera.read()
         features, cropped = self.runner.get_features_from_image(img)
-        print(features)
+        res = self.runner.classify(features)
+        print(res)
         # if "bounding_boxes" in res["result"].keys():
         #     print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
         #     for bb in res["result"]["bounding_boxes"]:
