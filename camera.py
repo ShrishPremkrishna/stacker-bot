@@ -53,15 +53,15 @@ class VideoCamera(object):
         if "bounding_boxes" in res["result"].keys():
             print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
             for bb in res["result"]["bounding_boxes"]:
-                logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
-                cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-                cropped = cv2.putText(cropped, bb['value'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+                if (bb['label'] == 'shoe'):
+                    logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
+                    cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
+                    cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+                    break
+        
         logs = np.full((800,800,3), 200, dtype=np.uint8)
-
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
-        # print(cropped.shape)
-        # print(logs.shape)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         ret, jpeg = cv2.imencode('.jpg', canvas)
         time.sleep(1)
