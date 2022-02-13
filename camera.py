@@ -24,7 +24,7 @@ class VideoCamera(object):
         if (self.runner):
             self.runner.stop()
 
-    def scale_crop_img(self, img):
+    def scalein_crop_img(self, img):
         scale_percent = 67 
         width = int(img.shape[1] * scale_percent / 100)
         height = int(img.shape[0] * scale_percent / 100)
@@ -32,14 +32,21 @@ class VideoCamera(object):
         resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
         return resized[0:320, 51:371]
 
+    def scaleout(self, img):
+        scale_percent = 200
+        width = int(img.shape[1] * scale_percent / 100)
+        height = int(img.shape[0] * scale_percent / 100)
+        dim = (width, height)
+        return cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+
     def get_frame(self):
         time.sleep(0.1)
         ret, img = self.camera.read()
         features, cropped = self.runner.get_features_from_image(img)
         res = self.runner.classify(features)
         print(res)
-        cropped = self.scale_crop_img(img)
-        print(cropped.shape)
+        cropped = self.scalein_crop_img(img)
+        # print(cropped.shape)
 
 
         if "bounding_boxes" in res["result"].keys():
@@ -50,9 +57,9 @@ class VideoCamera(object):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
                 # else:
                     # print('\tNO SHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
-        logs = np.full((320,320,3), 200, dtype=np.uint8)
-        print(cropped.shape)
-        print(logs.shape)
-        canvas = np.concatenate((cropped, logs), axis=1)
+        logs = np.full((640,640,3), 200, dtype=np.uint8)
+        # print(cropped.shape)
+        # print(logs.shape)
+        canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         ret, jpeg = cv2.imencode('.jpg', canvas)
         return jpeg.tobytes()
