@@ -64,4 +64,5 @@ class VideoCamera(object):
         # print(logs.shape)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         ret, jpeg = cv2.imencode('.jpg', canvas)
+        time.sleep(1)
         return jpeg.tobytes()
