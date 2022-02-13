@@ -46,20 +46,18 @@ class VideoCamera(object):
         res = self.runner.classify(features)
         print(res)
         cropped = self.scalein_crop_img(img)
-        logtext
+        logList = []
 
 
         if "bounding_boxes" in res["result"].keys():
             print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
             for bb in res["result"]["bounding_boxes"]:
-                # if (bb['value'] > 0.8):
-                print('\tSHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
+                logList.append('\tSHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-                # else:
-                    # print('\tNO SHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
         logs = np.full((800,800,3), 200, dtype=np.uint8)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-        cv2.putText(logs, str(res), (10, 10), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
+        for i, log in logList:
+            cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         # print(cropped.shape)
         # print(logs.shape)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
