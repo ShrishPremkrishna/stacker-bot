@@ -39,17 +39,20 @@ class VideoCamera(object):
         res = self.runner.classify(features)
         print(res)
         cropped = self.scale_crop_img(img)
+        print(cropped.shape)
 
 
         if "bounding_boxes" in res["result"].keys():
             print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
             for bb in res["result"]["bounding_boxes"]:
-                if (bb['value'] > 0.8):
+                # if (bb['value'] > 0.8):
                     print('\tSHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
                     img = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-                else:
-                    print('\tNO SHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
+                # else:
+                    # print('\tNO SHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
         logs = np.zeros((320,320,3), dtype=np.uint8)
+        print(img.shape)
+        print(logs.shape)
         canvas = np.concatenate((img, logs), axis=1)
         ret, jpeg = cv2.imencode('.jpg', canvas)
         return jpeg.tobytes()
