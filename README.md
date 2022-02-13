@@ -49,6 +49,7 @@
 - `cd robotics/pi-roboclaw-motor-controller/cv2`
 - `python3 cv2test.py`
 - `edge-impulse-linux --disable-microphone`
+- `edge-impulse-linux-runner --download -obj-det.eim`
 - https://studio.edgeimpulse.com/studio/80833/acquisition/training?page=1
 
 ## To fetch latest code from Github

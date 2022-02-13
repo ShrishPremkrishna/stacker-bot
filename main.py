@@ -9,7 +9,7 @@ import time
 import threading
 import os
 
-pi_camera = VideoCamera() 
+
 
 # App Globals (do not edit)
 app = Flask(__name__)
