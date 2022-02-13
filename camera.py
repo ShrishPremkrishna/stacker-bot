@@ -58,8 +58,8 @@ class VideoCamera(object):
                 # else:
                     # print('\tNO SHOW - %s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
         logs = np.full((640,640,3), 200, dtype=np.uint8)
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(logs, str(res), (10,10), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+        cv2.putText(logs, str(res), (10,10), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         # print(cropped.shape)
         # print(logs.shape)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
