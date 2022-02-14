@@ -40,6 +40,10 @@ class VideoCamera(object):
         print('Printing connection result - ' + str(result))
         print('Connection - ' + str(self.roboclaw._port.is_open))
 
+        self.next_action = self.now() + 1000
+
+    def now():
+        return round(time.time() * 1000)
 
     def lower_camera(self):
         print("lower_camera")
@@ -99,35 +103,43 @@ class VideoCamera(object):
         print(res)
         cropped = self.scalein_crop_img(img)
         logList = []
-        shoe_found = False
 
-        if "bounding_boxes" in res["result"].keys():
-            print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
-            for bb in res["result"]["bounding_boxes"]:
-                if (bb['label'] == 'shoe'):
-                    shoe_found = True
+        if (self.next_action == self.now()):
+            shoe_found = False
+            if "bounding_boxes" in res["result"].keys():
+                print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
+                for bb in res["result"]["bounding_boxes"]:
+                    if (bb['label'] == 'shoe'):
+                        shoe_found = True
+                        logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
+                        cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
+                        cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+                        
+                        if(bb['y'] > 50):
+                            if (self.cam_pulse < self.cam_max):
+                                self.lower_camera()
+                                logList.append("Lower camera angle")
+                            else:
+                                logList.append("Proximity Reached")
+                        else:
+                            self.move_chassis_up()
+                            logList.append("Moving chassis up")
+                        break
+            
+            if (not shoe_found):
+                if (self.cam_pulse < self.cam_max):
+                    self.lower_camera()
+                    logList.append("Lower camera angle")
+                else:
+                    logList.append("Proximity Reached")
+            self.next_action = self.now() + 2000
+        else:
+            if "bounding_boxes" in res["result"].keys():
+                print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
+                for bb in res["result"]["bounding_boxes"]:
                     logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
                     cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
                     cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-                    
-                    if(bb['y'] > 50):
-                        if (self.cam_pulse < self.cam_max):
-                            self.lower_camera()
-                            logList.append("Lower camera angle")
-                        else:
-                            logList.append("Proximity Reached")
-                    else:
-                        self.move_chassis_up()
-                        logList.append("Moving chassis up")
-                    break
-        
-        if (not shoe_found):
-            if (self.cam_pulse < self.cam_max):
-                self.lower_camera()
-                logList.append("Lower camera angle")
-            else:
-                logList.append("Proximity Reached")
-
         logs = np.full((800,800,3), 200, dtype=np.uint8)
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
