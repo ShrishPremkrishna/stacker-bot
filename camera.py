@@ -104,7 +104,7 @@ class VideoCamera(object):
         cropped = self.scalein_crop_img(img)
         logList = []
 
-        if (self.next_action == self.now()):
+        if (self.next_action < self.now()):
             shoe_found = False
             if "bounding_boxes" in res["result"].keys():
                 print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
