@@ -26,7 +26,8 @@ class VideoCamera(object):
         self.cam_min = 1600
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
-        self.pwm.setPWM(self.cam_channel, 0, self.cam_min)
+        print("camera pulse being initiated at " + str(self.cam_pulse))
+        self.pwm.setPWM(self.cam_channel, 0, self.cam_pulse)
         # self.pwm.setPWM(self.cam_channel, 0, 4096)
 
         self.speed = 20
