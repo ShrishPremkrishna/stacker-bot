@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  font-family: Arial, Helvetica, sans-serif;
+} */
+
+.main {
+  padding: 16px;
+  margin-bottom: 30px;
+}
+
+img {
+    display: block;
+}
+
+.camera-bg {
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+</style>
+</head>
+<title>Make - PiStream</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<body>
+<div class="main" id="newpost">
+  <img  class="camera-bg" id="bg" src="{{ url_for('video_feed') }}">   
+</div>  
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</body>
+</html>
+
