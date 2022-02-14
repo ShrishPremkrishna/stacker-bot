@@ -42,7 +42,7 @@ class VideoCamera(object):
 
         self.next_action = self.now() + 1000
 
-    def now():
+    def now(self):
         return round(time.time() * 1000)
 
     def lower_camera(self):
