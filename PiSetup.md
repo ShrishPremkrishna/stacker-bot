@@ -33,7 +33,7 @@
 16. `python packet_serial.py`
 
 ## Open raspberry configuration
-- `sudo rasp-config`
+- `sudo raspi-config`
 
 ## Dependencies for stacker-bot
 - `pip3 install pyPS4Controller`
