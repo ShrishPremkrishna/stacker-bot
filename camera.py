@@ -75,8 +75,8 @@ class VideoCamera(object):
         time.sleep(0.25)
 
     def move_chassis_left(self):  
-        self.roboclaw.ForwardM1(0x80,self.speed)
-        self.roboclaw.BackwardM2(0x80,self.speed)
+        self.roboclaw.BackwardM1(0x80,self.speed)
+        self.roboclaw.ForwardM2(0x80,self.speed)
         self.roboclaw.ForwardM1(0x81,self.speed)
         self.roboclaw.BackwardM2(0x81,self.speed)
         time.sleep(0.25)
