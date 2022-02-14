@@ -72,6 +72,31 @@ class VideoCamera(object):
         self.roboclaw.ForwardM2(0x80,0)
         self.roboclaw.ForwardM1(0x81,0)
         self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.25)
+
+    def move_chassis_left(self):  
+        self.roboclaw.ForwardM1(0x80,self.speed)
+        self.roboclaw.BackwardM2(0x80,self.speed)
+        self.roboclaw.ForwardM1(0x81,self.speed)
+        self.roboclaw.BackwardM2(0x81,self.speed)
+        time.sleep(0.25)
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.25)
+
+    def move_chassis_right(self):
+        self.roboclaw.ForwardM1(0x80,self.speed)
+        self.roboclaw.BackwardM2(0x80,self.speed)
+        self.roboclaw.BackwardM1(0x81,self.speed)
+        self.roboclaw.ForwardM2(0x81,self.speed)
+        time.sleep(0.25)
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.25)
 
     def __del__(self):
         self.camera.release()
@@ -124,6 +149,10 @@ class VideoCamera(object):
                         else:
                             self.move_chassis_up()
                             logList.append("Moving chassis up")
+                        if (bb['x'] > 100):
+                            self.move_chassis_left()
+                        elif (bb['x'] < 30):
+                            self.move_chassis_right()
                         break
             
             if (not shoe_found):
@@ -133,7 +162,7 @@ class VideoCamera(object):
                 else:
                     logList.append("Proximity Reached")
                     self.cam_pulse = 1600
-            self.next_action = self.now() + 2000
+            self.next_action = self.now() + 500
         else:
             if "bounding_boxes" in res["result"].keys():
                 print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
