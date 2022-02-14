@@ -150,9 +150,9 @@ class VideoCamera(object):
                             self.move_chassis_up()
                             logList.append("Moving chassis up")
                         if (bb['x'] > 100):
-                            self.move_chassis_left()
-                        elif (bb['x'] < 30):
                             self.move_chassis_right()
+                        elif (bb['x'] < 30):
+                            self.move_chassis_left()
                         break
             
             if (not shoe_found):
