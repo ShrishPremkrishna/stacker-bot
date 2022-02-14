@@ -132,6 +132,7 @@ class VideoCamera(object):
                     logList.append("Lower camera angle")
                 else:
                     logList.append("Proximity Reached")
+                    self.cam_pulse = 1600
             self.next_action = self.now() + 2000
         else:
             if "bounding_boxes" in res["result"].keys():
