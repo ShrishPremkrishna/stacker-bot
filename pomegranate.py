@@ -34,3 +34,9 @@ class MyController(Controller):
         print("RotateLeft")
 
 
+if __name__ == "__main__":
+    
+    controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
+    controller.listen(timeout=6)
+
+
