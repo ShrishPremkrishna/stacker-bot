@@ -43,7 +43,7 @@ class MyController(Controller):
         self.savePic()
         while (self.cam_pulse > self.cam_min) :
             # Lowers camera to a 100 pulse
-            for i in range(self.cam_pulse, self.cam_pulse - 100, 10):  
+            for i in range(self.cam_pulse, self.cam_pulse - 100, -10):  
                 self.pwm.setServoPulse(self.cam_channel, i)   
                 time.sleep(0.02) 
             print("Cam pulse being set at - " + str(self.cam_pulse))
