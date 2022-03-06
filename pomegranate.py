@@ -67,7 +67,7 @@ class MyController(Controller):
             print("failed to grab frame")
         img_name = "images/image_{}.jpg".format(ts)
         cv2.imwrite(img_name, frame)
-        print("{} written!".format(img_name))
+        print("{} written!".format(img_name), frame.shape)
         # print('postdelay')
         # time.sleep(0.2)
         cam.release()
