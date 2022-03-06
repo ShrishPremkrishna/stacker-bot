@@ -48,7 +48,7 @@
 - `cd robotics/pi-roboclaw-motor-controller/servo/maker-focus`
 - `python3 servo.py`
 - `cd robotics/pi-roboclaw-motor-controller/stacker-bot`
-
+- `cd robotics/stacker-bot`
 - `python3 pomegranate.py`
 - Take few pictures
 - `edge-impulse-uploader ./images/*.jpg`

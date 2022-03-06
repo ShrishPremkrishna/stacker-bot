@@ -5,6 +5,7 @@ from time import sleep
 import time
 import cv2
 import calendar 
+import numpy as np
 
 
 
@@ -66,6 +67,10 @@ class MyController(Controller):
         if not result:
             print("failed to grab frame")
         img_name = "images/image_{}.jpg".format(ts)
+        pts1 = np.float32([[0,0],[480,0],[0,640],[480,640]])
+        pts2 = np.float32([[0,0],[320,0],[0,320],[320,320]])
+        M = cv2.getPerspectiveTransform(pts1,pts2)
+        frame = cv2.warpPerspective(frame,M,(300,300))
         cv2.imwrite(img_name, frame)
         print("{} written!".format(img_name), frame.shape)
         # print('postdelay')
