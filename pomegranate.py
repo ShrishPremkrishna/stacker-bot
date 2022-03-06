@@ -60,16 +60,16 @@ class MyController(Controller):
     def savePic(self):
         cam = cv2.VideoCapture(0)
         ts = str(time.time()).replace(".", "_")
-        print('predelay')
-        time.sleep(0.5)
+        # print('predelay')
+        # time.sleep(0.2)
         result, frame = cam.read()
         if not result:
             print("failed to grab frame")
         img_name = "images/image_{}.jpg".format(ts)
         cv2.imwrite(img_name, frame)
         print("{} written!".format(img_name))
-        print('postdelay')
-        time.sleep(0.5)
+        # print('postdelay')
+        # time.sleep(0.2)
         cam.release()
         
                 
