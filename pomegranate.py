@@ -58,7 +58,7 @@ class MyController(Controller):
 
 
     def savePic(self):
-        time.sleep(0.2)
+        time.sleep(0.5)
         ts = str(time.time()).replace(".", "_")
         result, frame = self.cam.read()
         if not result:
