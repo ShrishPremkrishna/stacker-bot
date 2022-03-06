@@ -58,12 +58,14 @@ class MyController(Controller):
 
 
     def savePic(self):
-        time.sleep(0.5)
+        
         ts = str(time.time()).replace(".", "_")
         result, frame = self.cam.read()
         if not result:
             print("failed to grab frame")
         img_name = "images/image_{}.jpg".format(ts)
+        print("sleep 1 sec")
+        time.sleep(1)
         cv2.imwrite(img_name, frame)
         print("{} written!".format(img_name))
                 
