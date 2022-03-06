@@ -12,9 +12,9 @@ class MyController(Controller):
     def __init__(self, **kwargs):
         Controller.__init__(self, **kwargs)
 
-        self.cam_pulse = 1600
+        self.cam_pulse = 2200
         self.cam_channel = 4
-        self.cam_max = 2000
+        self.cam_max = 2200
         self.cam_min = 1600
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
@@ -33,21 +33,21 @@ class MyController(Controller):
         self.prepCam()
 
     def resetCamPosition (self):
-        self.cam_pulse = self.cam_min
+        self.cam_pulse = self.cam_max
         self.pwm.setPWM(self.cam_channel, 0, self.cam_pulse)
         print("Cam pulse at - " + str(self.cam_pulse))
 
     def prepCam(self):
-        if (self.cam_pulse != self.cam_min):
+        if (self.cam_pulse != self.cam_max):
             self.resetCamPosition()
         self.savePic()
-        while (self.cam_pulse < self.cam_max) :
+        while (self.cam_pulse > self.cam_min) :
             # Lowers camera to a 100 pulse
-            for i in range(self.cam_pulse, self.cam_pulse + 100, 10):  
+            for i in range(self.cam_pulse, self.cam_pulse - 100, 10):  
                 self.pwm.setServoPulse(self.cam_channel, i)   
                 time.sleep(0.02) 
             print("Cam pulse being set at - " + str(self.cam_pulse))
-            self.cam_pulse = self.cam_pulse + 100 
+            self.cam_pulse = self.cam_pulse - 100 
             self.savePic()
         self.resetCamPosition()
 

@@ -1,4 +1,8 @@
-for file in /images/*
+readme="./images/README.md"
+for file in ./images/*
 do
-    echo file
+    if [ "$file" != "$readme" ]; then
+        echo $file
+        edge-impulse-uploader $file
+    fi 
 done
