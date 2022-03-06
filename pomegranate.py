@@ -24,10 +24,10 @@ class MyController(Controller):
         self.motorSpeed = 20
         self.motorRest = 0
 
-        self.cam = cv2.VideoCapture(0)
+        
 
-    def __del__(self):
-        self.cam.release()
+    # def __del__(self):
+        # self.cam.release()
 
     def stopChassis(self):
         sleep(0.5)
@@ -58,11 +58,11 @@ class MyController(Controller):
 
 
     def savePic(self):
-        
+        cam = cv2.VideoCapture(0)
         ts = str(time.time()).replace(".", "_")
         print('predelay')
         time.sleep(5)
-        result, frame = self.cam.read()
+        result, frame = cam.read()
         if not result:
             print("failed to grab frame")
         img_name = "images/image_{}.jpg".format(ts)
@@ -70,6 +70,7 @@ class MyController(Controller):
         print("{} written!".format(img_name))
         print('predelay')
         time.sleep(5)
+        cam.release()
         
                 
 
