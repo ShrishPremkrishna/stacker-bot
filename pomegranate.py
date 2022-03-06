@@ -48,18 +48,18 @@ class MyController(Controller):
         self.savePic()
         while (self.cam_pulse > self.cam_min) :
             # Lowers camera to a 100 pulse
-            for i in range(self.cam_pulse, self.cam_pulse - 100, -10):  
+            for i in range(self.cam_pulse, self.cam_pulse - 200, -10):  
                 self.pwm.setServoPulse(self.cam_channel, i)   
                 time.sleep(0.02) 
             print("Cam pulse being set at - " + str(self.cam_pulse))
-            self.cam_pulse = self.cam_pulse - 100 
+            self.cam_pulse = self.cam_pulse - 200 
             self.savePic()
         self.resetCamPosition()
 
 
     def savePic(self):
-        gmt = time.gmtime()
-        ts = calendar.timegm(gmt)
+        time.sleep(0.2)
+        ts = str(time.time()).replace(".", "_")
         result, frame = self.cam.read()
         if not result:
             print("failed to grab frame")
