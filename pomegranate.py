@@ -65,7 +65,7 @@ class MyController(Controller):
             print("failed to grab frame")
         img_name = "images/image_{}.jpg".format(ts)
         print("sleep 1 sec")
-        time.sleep(3)
+        time.sleep(10)
         cv2.imwrite(img_name, frame)
         print("{} written!".format(img_name))
                 
