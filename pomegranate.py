@@ -15,7 +15,7 @@ class MyController(Controller):
         self.cam_pulse = 2200
         self.cam_channel = 4
         self.cam_max = 2200
-        self.cam_min = 1600
+        self.cam_min = 1800
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
         print("camera pulse being initiated at " + str(self.cam_pulse))
@@ -48,11 +48,11 @@ class MyController(Controller):
         self.savePic()
         while (self.cam_pulse > self.cam_min) :
             # Lowers camera to a 100 pulse
-            for i in range(self.cam_pulse, self.cam_pulse - 200, -10):  
+            for i in range(self.cam_pulse, self.cam_pulse - 100, -10):  
                 self.pwm.setServoPulse(self.cam_channel, i)   
                 time.sleep(0.02) 
             print("Cam pulse being set at - " + str(self.cam_pulse))
-            self.cam_pulse = self.cam_pulse - 200 
+            self.cam_pulse = self.cam_pulse - 100 
             self.savePic()
         self.resetCamPosition()
 
