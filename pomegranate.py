@@ -34,7 +34,7 @@ class MyController(Controller):
 
     def resetCamPosition (self):
         self.cam_pulse = self.cam_max
-        self.pwm.setPWM(self.cam_channel, 0, self.cam_pulse)
+        self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
         print("Cam pulse at - " + str(self.cam_pulse))
 
     def prepCam(self):
