@@ -67,7 +67,7 @@ class MyController(Controller):
         if not result:
             print("failed to grab frame")
         img_name = "images/image_{}.jpg".format(ts)
-        pts1 = np.float32([[0,0],[480,0],[0,640],[480,640]])
+        pts1 = np.float32([[0,0],[640,0],[0,480],[640,480]])
         pts2 = np.float32([[0,0],[320,0],[0,320],[320,320]])
         M = cv2.getPerspectiveTransform(pts1,pts2)
         frame = cv2.warpPerspective(frame,M,(320,320))
