@@ -70,7 +70,7 @@ class MyController(Controller):
         pts1 = np.float32([[0,0],[480,0],[0,640],[480,640]])
         pts2 = np.float32([[0,0],[320,0],[0,320],[320,320]])
         M = cv2.getPerspectiveTransform(pts1,pts2)
-        frame = cv2.warpPerspective(frame,M,(300,300))
+        frame = cv2.warpPerspective(frame,M,(320,320))
         cv2.imwrite(img_name, frame)
         print("{} written!".format(img_name), frame.shape)
         # print('postdelay')
