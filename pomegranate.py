@@ -24,6 +24,11 @@ class MyController(Controller):
         self.motorSpeed = 20
         self.motorRest = 0
 
+        self.cam = cv2.VideoCapture(0)
+
+    def __del__(self):
+        self.cam.release()
+
     def stopChassis(self):
         sleep(0.5)
         roboclaw.ForwardM1(0x80,self.motorRest)
@@ -53,16 +58,15 @@ class MyController(Controller):
 
 
     def savePic(self):
-        cam = cv2.VideoCapture(0)
         gmt = time.gmtime()
         ts = calendar.timegm(gmt)
-        result, frame = cam.read()
+        result, frame = self.cam.read()
         if not result:
             print("failed to grab frame")
         img_name = "images/image_{}.jpg".format(ts)
         cv2.imwrite(img_name, frame)
         print("{} written!".format(img_name))
-        cam.release()        
+                
 
     #Up
     def on_triangle_press(self):
