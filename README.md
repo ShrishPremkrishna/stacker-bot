@@ -46,6 +46,7 @@
 - `python3 servo.py`
 - `cd robotics/pi-roboclaw-motor-controller/stacker-bot`
 - `python3 main.py`
+- `python3 ingesion.py`
 - `cd robotics/pi-roboclaw-motor-controller/cv2`
 - `python3 cv2test.py`
 - `edge-impulse-linux --disable-microphone`
