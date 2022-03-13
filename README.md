@@ -40,11 +40,22 @@
 - On basic studio - check address
 - On basic studio - check packet/simple serial mode
 - On basic studio - check multi-unit mode
+
+-----
+
 - `cd robotics/pi-roboclaw-motor-controller/roboclaw_packet_serial`
 - `python3 packet_serial.py`
 - `cd robotics/pi-roboclaw-motor-controller/servo/maker-focus`
 - `python3 servo.py`
 - `cd robotics/pi-roboclaw-motor-controller/stacker-bot`
+- `cd robotics/stacker-bot`
+- `python3 pomegranate.py`
+- Take few pictures
+- `edge-impulse-uploader ./images/*.jpg`
+- `rm ./images/*.jpg`
+
+------
+
 - `python3 main.py`
 - `python3 ingesion.py`
 - `cd robotics/pi-roboclaw-motor-controller/cv2`
