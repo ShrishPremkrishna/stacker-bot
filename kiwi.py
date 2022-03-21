@@ -36,7 +36,6 @@ class MyController(Controller):
         roboclaw.ForwardM2(0x80,self.motorRest)
         roboclaw.ForwardM1(0x81,self.motorRest)
         roboclaw.ForwardM2(0x81,self.motorRest)
-        self.prepCam()
 
     def resetCamPosition (self):
         self.cam_pulse = self.cam_max
@@ -139,7 +138,7 @@ class MyController(Controller):
 
     def on_up_arrow_press(self):
         print("Still Picture")
-        self.stopChassis()
+        self.prepCam()
 
 
 
