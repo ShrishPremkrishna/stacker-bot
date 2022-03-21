@@ -137,7 +137,7 @@ class MyController(Controller):
         roboclaw.BackwardM2(0x81,self.motorSpeed)
         self.stopChassis()
 
-    def on_top_arrow_press(self):
+    def on_up_arrow_press(self):
         print("Still Picture")
         self.stopChassis()
 
