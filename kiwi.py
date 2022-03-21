@@ -15,7 +15,7 @@ class MyController(Controller):
 
         self.cam_pulse = 2700
         self.cam_channel = 4
-        self.cam_max = 2500
+        self.cam_max = 2700
         self.cam_min = 2700
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
