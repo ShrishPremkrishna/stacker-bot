@@ -40,8 +40,9 @@ class VideoCamera(object):
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
 
         self.next_action = self.now() - 100
-        self.proximity_reached = False
+        self.end_model1_probe = False
         self.frame_count = 0
+        self.retrys = 3
 
     def now(self):
         return round(time.time() * 1000)
@@ -140,7 +141,7 @@ class VideoCamera(object):
         print(res)
         logList.append("model 1 prediction" + str(res))
         
-        if "bounding_boxes" in res["result"].keys():
+        if res["result"]["bounding_boxes"].len > 0:
             bb = res["result"]["bounding_boxes"][0]
             if (bb['label'] == 'shoe'):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
@@ -153,7 +154,7 @@ class VideoCamera(object):
                     else:
                         logList.append("Proximity Reached")
                         print("Proximity Reached")
-                        self.proximity_reached = True
+                        self.end_model1_probe = True
                 elif(bb['y'] < 100):
                     self.move_chassis_up()
                     logList.append("Moving chassis up")
@@ -166,14 +167,27 @@ class VideoCamera(object):
                         self.move_chassis_left()
                         logList.append("Moving chassis left")
                         print("Moving chassis left")
+        elif self.retrys > 0:
+            self.retrys -= 1
+        elif (self.cam_pulse < self.cam_max):
+            self.lower_camera()
+        else:
+            logList.append("Unable to find shoe")
+            print("Unable to find shoe")
+            self.end_model1_probe = True
+
 
         logs = np.full((800,800,3), 200, dtype=np.uint8)
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', canvas)
-        if cv2.waitKey(300) == 27: 
-            print("wait key" + str(cv2.waitKey(1)))
+        if self.end_model1_probe == True:
+            if cv2.waitKey(2000) == 27: 
+                print("end wait key")
+        else:
+            if cv2.waitKey(300) == 27: 
+                print("end wait key")
         camera.release()
 
 
@@ -199,7 +213,7 @@ class VideoCamera(object):
         #                 else:
         #                     logList.append("Proximity Reached")
         #                     print("Proximity Reached")
-        #                     self.proximity_reached = True
+        #                     self.end_model1_probe = True
         #             elif(bb['y'] < 100):
         #                 self.move_chassis_up()
         #                 logList.append("Moving chassis up")
@@ -222,7 +236,7 @@ class VideoCamera(object):
         #         else:
         #             logList.append("Proximity Reached")
         #             print("Proximity Reached")
-        #             self.proximity_reached = True
+        #             self.end_model1_probe = True
         #             self.cam_pulse = self.cam_min
         #     self.next_action = self.now() + 1000
         # else:
@@ -237,6 +251,6 @@ class VideoCamera(object):
 
 if __name__ == "__main__":
     pi_camera = VideoCamera()
-    while(pi_camera.next_action < pi_camera.now() and pi_camera.proximity_reached == False):
+    while(pi_camera.next_action < pi_camera.now() and pi_camera.end_model1_probe == False):
         frame = pi_camera.get_frame()
 
