@@ -42,7 +42,6 @@ class VideoCamera(object):
         self.pwm.setPWMFreq(50)
         print("camera pulse being initiated at " + str(self.cam_pulse))
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
-
         
         self.gripper_channel = 0
         self.gripper_max = 2000
@@ -50,6 +49,13 @@ class VideoCamera(object):
         self.gripper_pulse = self.gripper_max
         print("gripper pulse being initiated at " + str(self.gripper_pulse))
         self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse)
+        
+        self.barlift_channel = 2
+        self.barlift_max = 2200
+        self.barlift_min = 600
+        self.barlift_pulse = self.barlift_min
+        print("barlift pulse being initiated at " + str(self.gripper_pulse))
+        self.pwm.setServoPulse(self.barlift_channel, self.barlift_pulse)
 
         self.end_model1_probe = False
         self.end_model2_probe = False
@@ -148,8 +154,6 @@ class VideoCamera(object):
         self.roboclaw.ForwardM1(0x82,0)
         time.sleep(0.15)
 
-    # Gripper controls
-    # close
     def gripper_close(self):
         print("On X Press")
         if (self.gripper_pulse > self.gripper_min) :
@@ -157,9 +161,6 @@ class VideoCamera(object):
             self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse) 
             time.sleep(0.02)
         
-    # def on_square_release(self):
-    #     pwm.setPWM(self.gripper_channel, 0, 4096)
-
     def gripper_open(self):
         print("On Triangle Press")
         if (self.gripper_pulse < self.gripper_max) :
@@ -167,10 +168,35 @@ class VideoCamera(object):
             self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse) 
             time.sleep(0.02)
 
+    # Bar Lift controls
+    def barlift_up(self):
+        print("On Traingle Press - lift barlift")
+        print("Barlift pulse at - " + str(self.barlift_pulse))
+        if (self.barlift_pulse < self.barlift_max) :
+            for i in range(self.barlift_pulse, self.barlift_pulse + 200, 10):  
+                self.pwm.setServoPulse(self.barlift_channel, i)   
+                time.sleep(0.02) 
+            print("Barlift pulse being set at - " + str(self.barlift_pulse))
+            self.barlift_pulse = self.barlift_pulse + 200 
+
+    def barlift_down(self):
+        print("On X Press - lower barlift")
+        print("Barlift pulse at - " + str(self.barlift_pulse))
+        if (self.barlift_pulse > self.barlift_min) :
+            print("Barlift pulse being set at - " + str(self.barlift_pulse))
+            for i in range(self.barlift_pulse, self.barlift_pulse - 200, -10):  
+                self.pwm.setServoPulse(self.barlift_channel, i)   
+                time.sleep(0.02) 
+            self.barlift_pulse = self.barlift_pulse - 200
+        if (self.barlift_pulse <= self.barlift_min + 100):
+            self.pwm.setPWM(self.barlift_channel, 0, 4096)
+
     def __del__(self):
         # self.camera.release()
         cv2.destroyAllWindows()
         self.pwm.setServoPulse(self.cam_channel, self.cam_max)
+        self.pwm.setPWM(self.gripper_channel, 0, 4096)
+        self.barlift_down()
         if (self.runner1):
             self.runner1.stop()
         if (self.runner2):
@@ -213,7 +239,8 @@ class VideoCamera(object):
         ret, img = camera.read()
         cropped = self.scalein_crop_img(img)
         logList = []
-        logList.append("frame count" + str(self.frame_count))
+        logList.append("*** MODEL 1 *** " + str(self.frame_count))
+        logList.append("frame count --- " + str(self.frame_count))
         self.frame_count += 1
         features, cropped1 = self.runner1.get_features_from_image(cropped)
         res = self.runner1.classify(features)
@@ -280,7 +307,8 @@ class VideoCamera(object):
         cropped = self.scalein_crop_img2(img)
         print(cropped.shape)
         logList = []
-        logList.append("frame count" + str(self.frame_count))
+        logList.append("*** MODEL 2 *** " + str(self.frame_count))
+        logList.append("frame count --- " + str(self.frame_count))
         self.frame_count += 1
         features, cropped1 = self.runner2.get_features_from_image(cropped)
         res = self.runner2.classify(features)
@@ -292,6 +320,7 @@ class VideoCamera(object):
         if res["result"]["classification"]["in-position"] > res["result"]["classification"]["out-of-position"]:
             logList.append("In Position")
             print("In Position")
+            self.move_chassis_around()
             self.end_model2_probe = True
         else:
             logList.append("Out of Position")
@@ -312,15 +341,16 @@ class VideoCamera(object):
         camera.release()
 
 if __name__ == "__main__":
-    pi_camera = VideoCamera()
-    pi_camera.linearslide_up(2.5)    
-    while(pi_camera.end_model1_probe == False):
-        frame = pi_camera.move_to_shoe()
-    while(pi_camera.end_model2_probe == False):
-        frame = pi_camera.move_around_shoe()
-    pi_camera.linearslide_down(2.5)
-    pi_camera.pwm.setServoPulse(pi_camera.gripper_channel, pi_camera.gripper_min)
-    pi_camera.linearslide_up(7)
+    sbot = VideoCamera()
+    sbot.linearslide_up(2.5)    
+    while(sbot.end_model1_probe == False):
+        frame = sbot.move_to_shoe()
+    while(sbot.end_model2_probe == False):
+        frame = sbot.move_around_shoe()
+    sbot.linearslide_down(2.5)
+    sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
+    sbot.linearslide_up(7)
+    sbot.barlift_up()
 
 
 
