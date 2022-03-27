@@ -135,7 +135,7 @@ class VideoCamera(object):
             if "bounding_boxes" in res["result"].keys():
                 print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
                 # for bb in res["result"]["bounding_boxes"]:
-                bb = res["result"]["bounding_boxes"][1]
+                bb = res["result"]["bounding_boxes"][0]
                 if (bb['label'] == 'shoe'):
                     shoe_found = True
                     logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
