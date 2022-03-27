@@ -209,8 +209,8 @@ class VideoCamera(object):
         logList = []
         logList.append("frame count" + str(self.frame_count))
         self.frame_count += 1
-        features, cropped1 = self.runner2.get_features_from_image(cropped)
-        res = self.runner2.classify(features)
+        # features, cropped1 = self.runner2.get_features_from_image(cropped)
+        res = self.runner2.classify(cropped)
         print(res)
         logList.append("model 1 prediction" + str(res))
         
