@@ -81,7 +81,7 @@
 
 ## Edge Impulse Commands
 - `edge-impulse-linux --disable-microphone`
-- `edge-impulse-linux --clean`
+- `edge-impulse-linux --clean --disable-microphone`
 - `edge-impulse-linux-runner --download sb-model-2.eim`
 - `edge-impulse-uploader --clean`
 

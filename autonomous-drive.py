@@ -17,7 +17,7 @@ class VideoCamera(object):
         model_info1 = self.runner1.init()
         print('Loaded runner1 for "' + model_info1['project']['owner'] + ' / ' + model_info1['project']['name'] + '"')
         
-        modelfile2= os.path.join(dir_path, 'sb-model-1.eim')
+        modelfile2= os.path.join(dir_path, 'sb-model-2.eim')
         self.runner2 = ImageImpulseRunner(modelfile2)
         model_info2 = self.runner1.init()
         print('Loaded runner2 for "' + model_info2['project']['owner'] + ' / ' + model_info2['project']['name'] + '"')
@@ -234,4 +234,6 @@ if __name__ == "__main__":
     #     frame = pi_camera.move_to_shoe()
     while(pi_camera.end_model2_probe == False):
         frame = pi_camera.move_around_shoe()
+
+
 
