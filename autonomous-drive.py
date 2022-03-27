@@ -22,6 +22,11 @@ class VideoCamera(object):
         model_info2 = self.runner2.init()
         print('Loaded runner2 for "' + model_info2['project']['owner'] + ' / ' + model_info2['project']['name'] + '"')
 
+        modelfile3= os.path.join(dir_path, 'sb-model-3a.eim')
+        self.runner3 = ImageImpulseRunner(modelfile3)
+        model_info3 = self.runner3.init()
+        print('Loaded runner3 for "' + model_info3['project']['owner'] + ' / ' + model_info3['project']['name'] + '"')
+
         # self.camera = cv2.VideoCapture(0)
         
         self.speed = 20
@@ -59,6 +64,7 @@ class VideoCamera(object):
 
         self.end_model1_probe = False
         self.end_model2_probe = False
+        self.end_model3_probe = False
         self.frame_count = 0
         self.retrys = 3
 
@@ -81,6 +87,36 @@ class VideoCamera(object):
     def raise_camera(self):
         print("raise_camera")
 
+    #RotateRight
+    def rotate_chassis_right(self):
+        print("RotateRight")
+        self.roboclaw.BackwardM1(0x80,self.speed)
+        self.roboclaw.ForwardM2(0x80,self.speed)
+        self.roboclaw.BackwardM1(0x81,self.speed)
+        self.roboclaw.ForwardM2(0x81,self.speed)
+        time.sleep(0.35)
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.15)
+        # self.stopChassis()
+
+
+    #RotateLeft
+    def rotate_chassis_left(self):
+        print("RotateLeft")
+        self.roboclaw.ForwardM1(0x80,self.speed)
+        self.roboclaw.BackwardM2(0x80,self.speed)
+        self.roboclaw.ForwardM1(0x81,self.speed)
+        self.roboclaw.BackwardM2(0x81,self.speed)
+        time.sleep(0.35)
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.15)
+        # self.stopChassis()
 
     def move_chassis_up(self):
         self.roboclaw.BackwardM1(0x80,self.speed)
@@ -337,18 +373,88 @@ class VideoCamera(object):
                 print("end wait key")
         camera.release()
 
+    def move_to_rack(self):
+        print("Move to Rack")
+        camera = cv2.VideoCapture(0)
+        font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+        ret, img = camera.read()
+        cropped = self.scalein_crop_img(img)
+        logList = []
+        logList.append("*** MODEL 3 *** ")
+        logList.append("frame count --- " + str(self.frame_count))
+        self.frame_count += 1
+        features, cropped1 = self.runner3.get_features_from_image(cropped)
+        res = self.runner3.classify(features)
+        print(res)
+        # logList.append("model 1 prediction" + str(res))
+        
+        if len(res["result"]["bounding_boxes"]) > 0:
+            self.retrys = 3
+            bb = res["result"]["bounding_boxes"][0]
+            cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
+            cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+            if(bb['width'] * bb['height'] > 22500):
+                logList.append("Proximity Reached")
+                print("Proximity Reached")
+                self.end_model3_probe = True
+            else:
+                self.move_chassis_up()
+                logList.append("Moving chassis up")
+                print("Moving chassis up")
+                if (bb['x'] > 200):
+                    self.move_chassis_right()
+                    logList.append("Moving chassis right")
+                    print("Moving chassis right")
+                elif (bb['x'] < 50):
+                    self.move_chassis_left()
+                    logList.append("Moving chassis left")
+                    print("Moving chassis left")
+                if (bb['width'] < bb['height'] + 20):
+                    self.rotate_chassis_left()
+                    logList.append("Rotate chassis left")
+                    print("Rotate chassis left")
+
+        elif self.retrys > 0:
+            self.retrys -= 1
+        elif (self.cam_pulse < self.cam_max):
+            self.lower_camera()
+        else:
+            logList.append("Unable to find shoe")
+            print("Unable to find shoe")
+            self.end_model1_probe = True
+
+
+        logs = np.full((800,800,3), 200, dtype=np.uint8)
+        for i, log in enumerate(logList):
+            cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
+        canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
+        cv2.imshow('camera-feed', canvas)
+        if self.end_model1_probe == True:
+            if cv2.waitKey(5000) == 27: 
+                print("end wait key")
+        else:
+            if cv2.waitKey(300) == 27: 
+                print("end wait key")
+        camera.release()
+
 if __name__ == "__main__":
 
     sbot = VideoCamera()
     sbot.linearslide_up(2.5)    
     while(sbot.end_model1_probe == False):
-        frame = sbot.move_to_shoe()
+        sbot.move_to_shoe()
     while(sbot.end_model2_probe == False):
-        frame = sbot.move_around_shoe()
+        sbot.move_around_shoe()
     sbot.linearslide_down(2.5)
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
     sbot.linearslide_up(7)
     sbot.barlift_up()
+
+    while(sbot.end_model3_probe == False):
+        sbot.move_to_rack()
+
+    sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_max)
+    time.sleep(20)
     del sbot
 
 
