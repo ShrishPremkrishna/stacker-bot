@@ -41,6 +41,7 @@ class VideoCamera(object):
 
         self.next_action = self.now() - 100
         self.proximity_reached = False
+        self.frame_count = 0
 
     def now(self):
         return round(time.time() * 1000)
@@ -135,7 +136,8 @@ class VideoCamera(object):
         cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
         cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
         
-        # logList = []
+        logList = []
+        logList.append("Lower camera angle")
 
         # if (self.next_action < self.now()):
         #     shoe_found = False
@@ -190,10 +192,11 @@ class VideoCamera(object):
         #             logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
         #             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
         #             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-        # logs = np.full((800,800,3), 200, dtype=np.uint8)
-        # for i, log in enumerate(logList):
-        #     cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
-        # canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
+        logs = np.full((800,800,3), 200, dtype=np.uint8)
+        logList.append("frame count" + str(self.frame_count))
+        for i, log in enumerate(logList):
+            cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
+        canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', cropped)
         if cv2.waitKey(1) == 27: 
             return
