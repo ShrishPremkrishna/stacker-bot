@@ -125,64 +125,63 @@ class VideoCamera(object):
         time.sleep(0.1)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
         ret, img = self.camera.read()
-        features, cropped = self.runner.get_features_from_image(img)
-        res = self.runner.classify(features)
-        print(res)
-        cropped = self.scalein_crop_img(img)
-        logList = []
+        # features, cropped = self.runner.get_features_from_image(img)
+        # res = self.runner.classify(features)
+        # print(res)
+        # cropped = self.scalein_crop_img(img)
+        # logList = []
 
-        if (self.next_action < self.now()):
-            shoe_found = False
-            if "bounding_boxes" in res["result"].keys():
-                print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
-                # for bb in res["result"]["bounding_boxes"]:
-                bb = res["result"]["bounding_boxes"][0]
-                if (bb['label'] == 'shoe'):
-                    shoe_found = True
-                    logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
-                    cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-                    cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        # if (self.next_action < self.now()):
+        #     shoe_found = False
+        #     if "bounding_boxes" in res["result"].keys():
+        #         print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
+        #         # for bb in res["result"]["bounding_boxes"]:
+        #         bb = res["result"]["bounding_boxes"][0]
+        #         if (bb['label'] == 'shoe'):
+        #             shoe_found = True
+        #             logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
+        #             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
+        #             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
                     
-                    if(bb['y'] > 100):
-                        if (self.cam_pulse < self.cam_max):
-                            self.lower_camera()
-                            logList.append("Lower camera angle")
-                        else:
-                            logList.append("Proximity Reached")
-                            self.proximity_reached = True
-                    elif(bb['y'] < 100):
-                        self.move_chassis_up()
-                        logList.append("Moving chassis up")
-                        if (bb['x'] > 100):
-                            self.move_chassis_right()
-                            logList.append("Moving chassis right")
-                        elif (bb['x'] < 30):
-                            self.move_chassis_left()
-                            logList.append("Moving chassis left")
+        #             if(bb['y'] > 100):
+        #                 if (self.cam_pulse < self.cam_max):
+        #                     self.lower_camera()
+        #                     logList.append("Lower camera angle")
+        #                 else:
+        #                     logList.append("Proximity Reached")
+        #                     self.proximity_reached = True
+        #             elif(bb['y'] < 100):
+        #                 self.move_chassis_up()
+        #                 logList.append("Moving chassis up")
+        #                 if (bb['x'] > 100):
+        #                     self.move_chassis_right()
+        #                     logList.append("Moving chassis right")
+        #                 elif (bb['x'] < 30):
+        #                     self.move_chassis_left()
+        #                     logList.append("Moving chassis left")
                         
             
-            if (not shoe_found):
-                if (self.cam_pulse < self.cam_max):
-                    self.lower_camera()
-                    logList.append("Lower camera angle")
-                else:
-                    logList.append("Proximity Reached")
-                    self.proximity_reached = True
-                    self.cam_pulse = self.cam_min
-            self.next_action = self.now() + 1000
-        else:
-            if "bounding_boxes" in res["result"].keys():
-                print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
-                for bb in res["result"]["bounding_boxes"]:
-                    logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
-                    cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-                    cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-        logs = np.full((800,800,3), 200, dtype=np.uint8)
-        for i, log in enumerate(logList):
-            cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
-        canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
-        cv2.imshow('camera-feed', canvas)
-        time.sleep(1)
+        #     if (not shoe_found):
+        #         if (self.cam_pulse < self.cam_max):
+        #             self.lower_camera()
+        #             logList.append("Lower camera angle")
+        #         else:
+        #             logList.append("Proximity Reached")
+        #             self.proximity_reached = True
+        #             self.cam_pulse = self.cam_min
+        #     self.next_action = self.now() + 1000
+        # else:
+        #     if "bounding_boxes" in res["result"].keys():
+        #         print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
+        #         for bb in res["result"]["bounding_boxes"]:
+        #             logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
+        #             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
+        #             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        # logs = np.full((800,800,3), 200, dtype=np.uint8)
+        # for i, log in enumerate(logList):
+        #     cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
+        # canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
+        cv2.imshow('camera-feed', img)
 
 
 if __name__ == "__main__":
