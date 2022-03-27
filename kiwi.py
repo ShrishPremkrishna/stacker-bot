@@ -81,7 +81,7 @@ class MyController(Controller):
         roboclaw.ForwardM2(0x80,0)
         roboclaw.ForwardM1(0x81,0)
         roboclaw.ForwardM2(0x81,0)
-        time.sleep(0.15)
+        time.sleep(0.25)
         roboclaw.ForwardM1(0x80,self.motorSpeed)
         roboclaw.BackwardM2(0x80,self.motorSpeed)
         roboclaw.ForwardM1(0x81,self.motorSpeed)
