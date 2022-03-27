@@ -17,7 +17,7 @@ class VideoCamera(object):
         model_info1 = self.runner1.init()
         print('Loaded runner1 for "' + model_info1['project']['owner'] + ' / ' + model_info1['project']['name'] + '"')
         
-        modelfile2= os.path.join(dir_path, 'sb-model-2a.eim')
+        modelfile2= os.path.join(dir_path, 'sb-model-2b.eim')
         self.runner2 = ImageImpulseRunner(modelfile2)
         model_info2 = self.runner2.init()
         print('Loaded runner2 for "' + model_info2['project']['owner'] + ' / ' + model_info2['project']['name'] + '"')
@@ -25,7 +25,7 @@ class VideoCamera(object):
         # self.camera = cv2.VideoCapture(0)
         
         self.speed = 20
-        self.Lspeed = 35
+        self.Lspeed = 20
         self.address = 0x80
         self.roboclaw = Roboclaw("/dev/serial0", 38400)
         result = self.roboclaw.Open()
@@ -124,6 +124,21 @@ class VideoCamera(object):
         self.roboclaw.ForwardM2(0x80,0)
         self.roboclaw.ForwardM1(0x81,0)
         self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.15)
+
+    def linearslide_up(self, duration):
+        print("Linear slide Up")
+        self.roboclaw.ForwardM1(0x82,self.Lspeed)
+        time.sleep(0.15)
+        self.roboclaw.ForwardM1(0x82,0)
+        time.sleep(0.15)
+
+        #Down
+    def linearslide_down(self, duration):
+        print("Linear slide Down")
+        self.roboclaw.BackwardM1(0x82,self.Lspeed)
+        time.sleep(0.15)
+        self.roboclaw.ForwardM1(0x82,0)
         time.sleep(0.15)
 
     def __del__(self):
@@ -272,10 +287,12 @@ class VideoCamera(object):
 
 if __name__ == "__main__":
     pi_camera = VideoCamera()
-    while(pi_camera.end_model1_probe == False):
-        frame = pi_camera.move_to_shoe()
-    while(pi_camera.end_model2_probe == False):
-        frame = pi_camera.move_around_shoe()
+    pi_camera.linearslide_up()
+    pi_camera.linearslide_down()
+    # while(pi_camera.end_model1_probe == False):
+    #     frame = pi_camera.move_to_shoe()
+    # while(pi_camera.end_model2_probe == False):
+    #     frame = pi_camera.move_around_shoe()
 
 
 
