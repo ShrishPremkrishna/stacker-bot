@@ -87,36 +87,31 @@ class VideoCamera(object):
     def raise_camera(self):
         print("raise_camera")
 
-    #RotateRight
     def rotate_chassis_right(self):
         print("RotateRight")
         self.roboclaw.BackwardM1(0x80,self.speed)
         self.roboclaw.ForwardM2(0x80,self.speed)
         self.roboclaw.BackwardM1(0x81,self.speed)
         self.roboclaw.ForwardM2(0x81,self.speed)
-        time.sleep(0.35)
+        time.sleep(0.2)
         self.roboclaw.ForwardM1(0x80,0)
         self.roboclaw.ForwardM2(0x80,0)
         self.roboclaw.ForwardM1(0x81,0)
         self.roboclaw.ForwardM2(0x81,0)
         time.sleep(0.15)
-        # self.stopChassis()
 
-
-    #RotateLeft
     def rotate_chassis_left(self):
         print("RotateLeft")
         self.roboclaw.ForwardM1(0x80,self.speed)
         self.roboclaw.BackwardM2(0x80,self.speed)
         self.roboclaw.ForwardM1(0x81,self.speed)
         self.roboclaw.BackwardM2(0x81,self.speed)
-        time.sleep(0.35)
+        time.sleep(0.2)
         self.roboclaw.ForwardM1(0x80,0)
         self.roboclaw.ForwardM2(0x80,0)
         self.roboclaw.ForwardM1(0x81,0)
         self.roboclaw.ForwardM2(0x81,0)
         time.sleep(0.15)
-        # self.stopChassis()
 
     def move_chassis_up(self):
         self.roboclaw.BackwardM1(0x80,self.speed)
@@ -204,7 +199,6 @@ class VideoCamera(object):
             self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse) 
             time.sleep(0.02)
 
-    # Bar Lift controls
     def barlift_up(self):
         print("Barlift pulse at - " + str(self.barlift_pulse))
         for i in range(self.barlift_pulse, self.barlift_max, 20):  
@@ -405,14 +399,13 @@ class VideoCamera(object):
                     self.move_chassis_right()
                     logList.append("Moving chassis right")
                     print("Moving chassis right")
-                elif (bb['x'] < 50):
-                    self.move_chassis_left()
-                    logList.append("Moving chassis left")
-                    print("Moving chassis left")
-                if (bb['width'] < bb['height'] + 20):
                     self.rotate_chassis_left()
                     logList.append("Rotate chassis left")
                     print("Rotate chassis left")
+                elif (bb['x'] < 5):
+                    self.move_chassis_left()
+                    logList.append("Moving chassis left")
+                    print("Moving chassis left")
 
         elif self.retrys > 0:
             self.retrys -= 1
@@ -440,20 +433,20 @@ class VideoCamera(object):
 if __name__ == "__main__":
 
     sbot = VideoCamera()
-    sbot.linearslide_up(2.5)    
-    while(sbot.end_model1_probe == False):
-        sbot.move_to_shoe()
-    while(sbot.end_model2_probe == False):
-        sbot.move_around_shoe()
-    sbot.linearslide_down(2.5)
-    sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
-    sbot.linearslide_up(7)
-    sbot.barlift_up()
+    # sbot.linearslide_up(2.5)    
+    # while(sbot.end_model1_probe == False):
+    #     sbot.move_to_shoe()
+    # while(sbot.end_model2_probe == False):
+    #     sbot.move_around_shoe()
+    # sbot.linearslide_down(2.5)
+    # sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
+    # sbot.linearslide_up(7)
+    # sbot.barlift_up()
 
     while(sbot.end_model3_probe == False):
         sbot.move_to_rack()
 
-    sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_max)
+    # sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_max)
     time.sleep(20)
     del sbot
 
