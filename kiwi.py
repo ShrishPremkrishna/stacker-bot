@@ -55,9 +55,9 @@ class MyController(Controller):
             print("failed to grab frame")
         img_name = "images/{}-position_{}.jpg".format(label, ts)
         pts1 = np.float32([[0,0],[640,0],[0,480],[640,480]])
-        pts2 = np.float32([[0,0],[320,0],[0,320],[320,320]])
+        pts2 = np.float32([[0,0],[96,0],[0,96],[96,96]])
         M = cv2.getPerspectiveTransform(pts1,pts2)
-        frame = cv2.warpPerspective(frame,M,(320,320))
+        frame = cv2.warpPerspective(frame,M,(96,96))
         cv2.imwrite(img_name, frame)
         cv2.imshow(img_name, frame)
         if cv2.waitKey(300) == 27: 

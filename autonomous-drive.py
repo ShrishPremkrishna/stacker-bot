@@ -136,17 +136,27 @@ class VideoCamera(object):
             self.runner2.stop()
 
     def scalein_crop_img(self, img):
-        scale_percent = 67 
-        width = int(img.shape[1] * scale_percent / 100)
-        height = int(img.shape[0] * scale_percent / 100)
-        dim = (width, height)
-        resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
-        return resized[0:320, 51:371]
+        # scale_percent = 67 
+        # width = int(img.shape[1] * scale_percent / 100)
+        # height = int(img.shape[0] * scale_percent / 100)
+        # dim = (width, height)
+        # resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+        # return resized[0:320, 51:371]
+        pts1 = np.float32([[0,0],[640,0],[0,480],[640,480]])
+        pts2 = np.float32([[0,0],[320,0],[0,320],[320,320]])
+        M = cv2.getPerspectiveTransform(pts1,pts2)
+        frame = cv2.warpPerspective(frame,M,(320,320))
+        return frame
 
     def scalein_crop_img2(self, img):
-        dim = (96, 96)
-        resized = cv2.resize(img[0:480, 80:560], dim, interpolation = cv2.INTER_AREA)
-        return resized
+        # dim = (96, 96)
+        # resized = cv2.resize(img[0:480, 80:560], dim, interpolation = cv2.INTER_AREA)
+        # return resized
+        pts1 = np.float32([[0,0],[640,0],[0,480],[640,480]])
+        pts2 = np.float32([[0,0],[96,0],[0,96],[96,96]])
+        M = cv2.getPerspectiveTransform(pts1,pts2)
+        frame = cv2.warpPerspective(frame,M,(96,96))
+        return frame
 
     def scaleout(self, img):
         scale_percent = 250
