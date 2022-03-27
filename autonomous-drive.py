@@ -43,6 +43,14 @@ class VideoCamera(object):
         print("camera pulse being initiated at " + str(self.cam_pulse))
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
 
+        
+        self.gripper_channel = 0
+        self.gripper_max = 2000
+        self.gripper_min = 1200
+        self.gripper_pulse = self.gripper_max
+        print("gripper pulse being initiated at " + str(self.gripper_pulse))
+        self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse)
+
         self.end_model1_probe = False
         self.end_model2_probe = False
         self.frame_count = 0
@@ -126,20 +134,38 @@ class VideoCamera(object):
         self.roboclaw.ForwardM2(0x81,0)
         time.sleep(0.15)
 
-    def linearslide_up(self):
+    def linearslide_up(self, duration):
         print("Linear slide Up")
         self.roboclaw.ForwardM1(0x82,self.Lspeed)
-        time.sleep(1.5)
+        time.sleep(duration)
         self.roboclaw.ForwardM1(0x82,0)
         time.sleep(0.15)
 
-        #Down
-    def linearslide_down(self):
+    def linearslide_down(self, duration):
         print("Linear slide Down")
         self.roboclaw.BackwardM1(0x82,self.Lspeed)
-        time.sleep(1.5)
+        time.sleep(duration)
         self.roboclaw.ForwardM1(0x82,0)
         time.sleep(0.15)
+
+    # Gripper controls
+    # close
+    def gripper_close(self):
+        print("On X Press")
+        if (self.gripper_pulse > self.gripper_min) :
+            self.gripper_pulse = self.gripper_pulse - 100
+            self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse) 
+            time.sleep(0.02)
+        
+    # def on_square_release(self):
+    #     pwm.setPWM(self.gripper_channel, 0, 4096)
+
+    def gripper_open(self):
+        print("On Triangle Press")
+        if (self.gripper_pulse < self.gripper_max) :
+            self.gripper_pulse = self.gripper_pulse + 200
+            self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse) 
+            time.sleep(0.02)
 
     def __del__(self):
         # self.camera.release()
@@ -200,7 +226,7 @@ class VideoCamera(object):
             if (bb['label'] == 'shoe'):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
                 cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-                if(bb['y'] > 180):
+                if(bb['y'] > 150):
                     if (self.cam_pulse < self.cam_max):
                         self.lower_camera()
                         logList.append("Lower camera angle")
@@ -209,7 +235,7 @@ class VideoCamera(object):
                         logList.append("Proximity Reached")
                         print("Proximity Reached")
                         self.end_model1_probe = True
-                elif(bb['y'] < 180):
+                elif(bb['y'] < 150):
                     self.move_chassis_up()
                     logList.append("Moving chassis up")
                     print("Moving chassis up")
@@ -287,12 +313,14 @@ class VideoCamera(object):
 
 if __name__ == "__main__":
     pi_camera = VideoCamera()
-    pi_camera.linearslide_up()    
+    pi_camera.linearslide_up(2.5)    
     while(pi_camera.end_model1_probe == False):
         frame = pi_camera.move_to_shoe()
     while(pi_camera.end_model2_probe == False):
         frame = pi_camera.move_around_shoe()
-    pi_camera.linearslide_down()
+    pi_camera.linearslide_down(2.5)
+    pi_camera.pwm.setServoPulse(pi_camera.gripper_channel, pi_camera.gripper_min)
+    pi_camera.linearslide_up(7)
 
 
 
