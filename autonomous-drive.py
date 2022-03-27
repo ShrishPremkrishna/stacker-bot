@@ -185,7 +185,7 @@ class VideoCamera(object):
             if (bb['label'] == 'shoe'):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
                 cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-                if(bb['y'] > 100):
+                if(bb['y'] > 180):
                     if (self.cam_pulse < self.cam_max):
                         self.lower_camera()
                         logList.append("Lower camera angle")
@@ -194,7 +194,7 @@ class VideoCamera(object):
                         logList.append("Proximity Reached")
                         print("Proximity Reached")
                         self.end_model1_probe = True
-                elif(bb['y'] < 150):
+                elif(bb['y'] < 180):
                     self.move_chassis_up()
                     logList.append("Moving chassis up")
                     print("Moving chassis up")
