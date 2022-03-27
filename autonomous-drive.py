@@ -109,7 +109,7 @@ class VideoCamera(object):
         self.roboclaw.BackwardM2(0x80,self.speed)
         self.roboclaw.BackwardM1(0x81,self.speed)
         self.roboclaw.ForwardM2(0x81,self.speed)
-        time.sleep(0.35)
+        time.sleep(0.50)
         self.roboclaw.ForwardM1(0x80,0)
         self.roboclaw.ForwardM2(0x80,0)
         self.roboclaw.ForwardM1(0x81,0)
@@ -274,8 +274,8 @@ if __name__ == "__main__":
     pi_camera = VideoCamera()
     while(pi_camera.end_model1_probe == False):
         frame = pi_camera.move_to_shoe()
-    # while(pi_camera.end_model2_probe == False):
-    #     frame = pi_camera.move_around_shoe()
+    while(pi_camera.end_model2_probe == False):
+        frame = pi_camera.move_around_shoe()
 
 
 
