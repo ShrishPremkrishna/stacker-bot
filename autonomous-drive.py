@@ -49,7 +49,7 @@ class VideoCamera(object):
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
         
         self.gripper_channel = 0
-        self.gripper_max = 2100
+        self.gripper_max = 2300
         self.gripper_min = 1200
         self.gripper_pulse = self.gripper_max
         print("gripper pulse being initiated at " + str(self.gripper_pulse))
