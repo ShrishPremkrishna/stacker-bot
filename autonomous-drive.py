@@ -197,7 +197,7 @@ class VideoCamera(object):
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
-        cv2.imshow('camera-feed', cropped)
+        cv2.imshow('camera-feed', canvas)
         if cv2.waitKey(1) == 27: 
             return
         time.sleep(1)
