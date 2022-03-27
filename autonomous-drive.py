@@ -107,7 +107,7 @@ class VideoCamera(object):
     def __del__(self):
         # self.camera.release()
         cv2.destroyAllWindows()
-        self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
+        self.pwm.setServoPulse(self.cam_channel, self.cam_max)
         if (self.runner1):
             self.runner1.stop()
         if (self.runner2):
