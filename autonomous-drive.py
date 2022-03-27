@@ -182,6 +182,8 @@ class VideoCamera(object):
         #     cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         # canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', img)
+        if cv2.waitKey(1) == 27: 
+            return
 
 
 if __name__ == "__main__":
