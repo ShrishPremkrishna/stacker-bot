@@ -17,7 +17,7 @@ class VideoCamera(object):
         model_info1 = self.runner1.init()
         print('Loaded runner1 for "' + model_info1['project']['owner'] + ' / ' + model_info1['project']['name'] + '"')
         
-        modelfile2= os.path.join(dir_path, 'sb-model-2.eim')
+        modelfile2= os.path.join(dir_path, 'sb-model-2a.eim')
         self.runner2 = ImageImpulseRunner(modelfile2)
         model_info2 = self.runner1.init()
         print('Loaded runner2 for "' + model_info2['project']['owner'] + ' / ' + model_info2['project']['name'] + '"')
@@ -198,11 +198,11 @@ class VideoCamera(object):
         camera = cv2.VideoCapture(0)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
         ret, img = camera.read()
-        cropped = self.scalein_crop_img(img)
+        # cropped = self.scalein_crop_img(img)
         logList = []
         logList.append("frame count" + str(self.frame_count))
         self.frame_count += 1
-        features, cropped1 = self.runner2.get_features_from_image(cropped)
+        features, cropped1 = self.runner2.get_features_from_image(img)
         res = self.runner2.classify(features)
         print(res)
         logList.append("model 1 prediction" + str(res))
@@ -215,10 +215,10 @@ class VideoCamera(object):
             self.end_model2_probe = True
 
 
-        logs = np.full((800,800,3), 200, dtype=np.uint8)
+        logs = np.full((480,600,3), 200, dtype=np.uint8)
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
-        canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
+        canvas = np.concatenate((img, logs), axis=1)
         cv2.imshow('camera-feed', canvas)
         if self.end_model1_probe == True:
             if cv2.waitKey(5000) == 27: 
