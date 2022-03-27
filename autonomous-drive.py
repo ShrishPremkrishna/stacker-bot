@@ -129,7 +129,7 @@ class VideoCamera(object):
     def linearslide_up(self):
         print("Linear slide Up")
         self.roboclaw.ForwardM1(0x82,self.Lspeed)
-        time.sleep(1)
+        time.sleep(1.5)
         self.roboclaw.ForwardM1(0x82,0)
         time.sleep(0.15)
 
@@ -137,7 +137,7 @@ class VideoCamera(object):
     def linearslide_down(self):
         print("Linear slide Down")
         self.roboclaw.BackwardM1(0x82,self.Lspeed)
-        time.sleep(1)
+        time.sleep(1.5)
         self.roboclaw.ForwardM1(0x82,0)
         time.sleep(0.15)
 
@@ -287,12 +287,12 @@ class VideoCamera(object):
 
 if __name__ == "__main__":
     pi_camera = VideoCamera()
-    pi_camera.linearslide_up()
+    pi_camera.linearslide_up()    
+    while(pi_camera.end_model1_probe == False):
+        frame = pi_camera.move_to_shoe()
+    while(pi_camera.end_model2_probe == False):
+        frame = pi_camera.move_around_shoe()
     pi_camera.linearslide_down()
-    # while(pi_camera.end_model1_probe == False):
-    #     frame = pi_camera.move_to_shoe()
-    # while(pi_camera.end_model2_probe == False):
-    #     frame = pi_camera.move_around_shoe()
 
 
 
