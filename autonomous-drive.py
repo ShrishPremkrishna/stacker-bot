@@ -131,6 +131,7 @@ class VideoCamera(object):
         features, cropped1 = self.runner.get_features_from_image(cropped)
         res = self.runner.classify(features)
         # print(res)
+        bb = res["result"]["bounding_boxes"][0]
         cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
         cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
         
