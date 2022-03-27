@@ -39,8 +39,8 @@ class VideoCamera(object):
         print("camera pulse being initiated at " + str(self.cam_pulse))
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
 
-        self.next_action = self.now() - 100
         self.end_model1_probe = False
+        self.end_model2_probe = False
         self.frame_count = 0
         self.retrys = 3
 
@@ -122,26 +122,22 @@ class VideoCamera(object):
         dim = (width, height)
         return cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
 
-    def get_frame(self):
-        print("Getting frame")
+    def move_to_shoe(self):
+        print("Move to Shoe")
         camera = cv2.VideoCapture(0)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-        img = None
         ret, img = camera.read()
-        print(img.shape)
         cropped = self.scalein_crop_img(img)
-        print(cropped.shape)
-
         logList = []
         logList.append("frame count" + str(self.frame_count))
         self.frame_count += 1
-
         features, cropped1 = self.runner.get_features_from_image(cropped)
         res = self.runner.classify(features)
         print(res)
         logList.append("model 1 prediction" + str(res))
         
         if len(res["result"]["bounding_boxes"]) > 0:
+            self.retrys = 3
             bb = res["result"]["bounding_boxes"][0]
             if (bb['label'] == 'shoe'):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
@@ -183,74 +179,56 @@ class VideoCamera(object):
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', canvas)
         if self.end_model1_probe == True:
-            if cv2.waitKey(2000) == 27: 
+            if cv2.waitKey(5000) == 27: 
                 print("end wait key")
         else:
             if cv2.waitKey(300) == 27: 
                 print("end wait key")
         camera.release()
 
-
-                
-
-        # if (self.next_action < self.now()):
-        #     shoe_found = False
-        #     if "bounding_boxes" in res["result"].keys():
-        #         print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
-        #         # for bb in res["result"]["bounding_boxes"]:
-        #         bb = res["result"]["bounding_boxes"][0]
-        #         if (bb['label'] == 'shoe'):
-        #             shoe_found = True
-        #             logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
-        #             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-        #             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-                    
-        #             if(bb['y'] > 100):
-        #                 if (self.cam_pulse < self.cam_max):
-        #                     self.lower_camera()
-        #                     logList.append("Lower camera angle")
-        #                     print("Lower camera angle")
-        #                 else:
-        #                     logList.append("Proximity Reached")
-        #                     print("Proximity Reached")
-        #                     self.end_model1_probe = True
-        #             elif(bb['y'] < 100):
-        #                 self.move_chassis_up()
-        #                 logList.append("Moving chassis up")
-        #                 print("Moving chassis up")
-        #                 if (bb['x'] > 100):
-        #                     self.move_chassis_right()
-        #                     logList.append("Moving chassis right")
-        #                     print("Moving chassis right")
-        #                 elif (bb['x'] < 30):
-        #                     self.move_chassis_left()
-        #                     logList.append("Moving chassis left")
-        #                     print("Moving chassis left")
-                        
-            
-        #     if (not shoe_found):
-        #         if (self.cam_pulse < self.cam_max):
-        #             self.lower_camera()
-        #             logList.append("Lower camera angle")
-        #             print("Lower camera angle")
-        #         else:
-        #             logList.append("Proximity Reached")
-        #             print("Proximity Reached")
-        #             self.end_model1_probe = True
-        #             self.cam_pulse = self.cam_min
-        #     self.next_action = self.now() + 1000
-        # else:
-        #     if "bounding_boxes" in res["result"].keys():
-        #         print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
-        #         for bb in res["result"]["bounding_boxes"]:
-        #             logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
-        #             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-        #             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+    def move_around_shoe(self):
+        print("Move around Shoe")
+        camera = cv2.VideoCapture(0)
+        font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+        ret, img = camera.read()
+        cropped = self.scalein_crop_img(img)
+        logList = []
+        logList.append("frame count" + str(self.frame_count))
+        self.frame_count += 1
+        features, cropped1 = self.runner.get_features_from_image(cropped)
+        res = self.runner.classify(features)
+        print(res)
+        logList.append("model 1 prediction" + str(res))
+        
+        if len(res["result"]) > 0:
+            print("result")
+        elif self.retrys > 0:
+            self.retrys -= 1
+        elif (self.cam_pulse < self.cam_max):
+            self.lower_camera()
+        else:
+            logList.append("Unable to find shoe")
+            print("Unable to find shoe")
+            self.end_model1_probe = True
 
 
+        logs = np.full((800,800,3), 200, dtype=np.uint8)
+        for i, log in enumerate(logList):
+            cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
+        canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
+        cv2.imshow('camera-feed', canvas)
+        if self.end_model1_probe == True:
+            if cv2.waitKey(5000) == 27: 
+                print("end wait key")
+        else:
+            if cv2.waitKey(300) == 27: 
+                print("end wait key")
+        camera.release()
 
 if __name__ == "__main__":
     pi_camera = VideoCamera()
-    while(pi_camera.next_action < pi_camera.now() and pi_camera.end_model1_probe == False):
-        frame = pi_camera.get_frame()
+    # while(pi_camera.end_model1_probe == False):
+    #     frame = pi_camera.move_to_shoe()
+    while(pi_camera.end_model2_probe == False):
+        frame = pi_camera.move_around_shoe()
 
