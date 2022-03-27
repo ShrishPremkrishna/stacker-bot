@@ -39,7 +39,7 @@ class VideoCamera(object):
         print("camera pulse being initiated at " + str(self.cam_pulse))
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
 
-        self.next_action = self.now() 
+        self.next_action = self.now() - 100
         self.proximity_reached = False
 
     def now(self):
@@ -120,6 +120,7 @@ class VideoCamera(object):
         return cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
 
     def get_frame(self):
+        print("Getting frame")
         time.sleep(0.1)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
         ret, img = self.camera.read()
