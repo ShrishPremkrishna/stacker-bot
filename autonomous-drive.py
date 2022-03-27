@@ -272,10 +272,10 @@ class VideoCamera(object):
 
 if __name__ == "__main__":
     pi_camera = VideoCamera()
-    # while(pi_camera.end_model1_probe == False):
-    #     frame = pi_camera.move_to_shoe()
-    while(pi_camera.end_model2_probe == False):
-        frame = pi_camera.move_around_shoe()
+    while(pi_camera.end_model1_probe == False):
+        frame = pi_camera.move_to_shoe()
+    # while(pi_camera.end_model2_probe == False):
+    #     frame = pi_camera.move_around_shoe()
 
 
 
