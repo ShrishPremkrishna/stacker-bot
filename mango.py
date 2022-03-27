@@ -74,6 +74,12 @@ class MyController(Controller):
         roboclaw.BackwardM2(0x80,self.motorSpeed)
         roboclaw.BackwardM1(0x81,self.motorSpeed)
         roboclaw.BackwardM2(0x81,self.motorSpeed)
+        time.sleep(0.50)
+        roboclaw.ForwardM1(0x80,0)
+        roboclaw.ForwardM2(0x80,0)
+        roboclaw.ForwardM1(0x81,0)
+        roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.25)
         # self.stopChassis()
 
     #Down
@@ -83,6 +89,12 @@ class MyController(Controller):
         roboclaw.ForwardM2(0x80,self.motorSpeed)
         roboclaw.ForwardM1(0x81,self.motorSpeed)
         roboclaw.ForwardM2(0x81,self.motorSpeed)
+        time.sleep(0.50)
+        roboclaw.ForwardM1(0x80,0)
+        roboclaw.ForwardM2(0x80,0)
+        roboclaw.ForwardM1(0x81,0)
+        roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.25)
         # self.stopChassis()
 
 
@@ -93,6 +105,12 @@ class MyController(Controller):
         roboclaw.BackwardM2(0x80,self.motorSpeed)
         roboclaw.BackwardM1(0x81,self.motorSpeed)
         roboclaw.ForwardM2(0x81,self.motorSpeed)
+        time.sleep(0.50)
+        roboclaw.ForwardM1(0x80,0)
+        roboclaw.ForwardM2(0x80,0)
+        roboclaw.ForwardM1(0x81,0)
+        roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.25)
         # self.stopChassis()
 
 
@@ -103,6 +121,12 @@ class MyController(Controller):
         roboclaw.ForwardM2(0x80,self.motorSpeed)
         roboclaw.ForwardM1(0x81,self.motorSpeed)
         roboclaw.BackwardM2(0x81,self.motorSpeed)
+        time.sleep(0.50)
+        roboclaw.ForwardM1(0x80,0)
+        roboclaw.ForwardM2(0x80,0)
+        roboclaw.ForwardM1(0x81,0)
+        roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.25)
         # self.stopChassis()
 
 
@@ -113,6 +137,12 @@ class MyController(Controller):
         roboclaw.ForwardM2(0x80,self.motorSpeed)
         roboclaw.BackwardM1(0x81,self.motorSpeed)
         roboclaw.ForwardM2(0x81,self.motorSpeed)
+        time.sleep(0.50)
+        roboclaw.ForwardM1(0x80,0)
+        roboclaw.ForwardM2(0x80,0)
+        roboclaw.ForwardM1(0x81,0)
+        roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.25)
         # self.stopChassis()
 
 
@@ -123,6 +153,12 @@ class MyController(Controller):
         roboclaw.BackwardM2(0x80,self.motorSpeed)
         roboclaw.ForwardM1(0x81,self.motorSpeed)
         roboclaw.BackwardM2(0x81,self.motorSpeed)
+        time.sleep(0.50)
+        roboclaw.ForwardM1(0x80,0)
+        roboclaw.ForwardM2(0x80,0)
+        roboclaw.ForwardM1(0x81,0)
+        roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.25)
         # self.stopChassis()
 
     # #Rotate
