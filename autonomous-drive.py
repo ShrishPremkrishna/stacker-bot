@@ -49,7 +49,7 @@ class VideoCamera(object):
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
         
         self.gripper_channel = 0
-        self.gripper_max = 2000
+        self.gripper_max = 2100
         self.gripper_min = 1200
         self.gripper_pulse = self.gripper_max
         print("gripper pulse being initiated at " + str(self.gripper_pulse))
@@ -339,7 +339,6 @@ class VideoCamera(object):
             print("In Position")
             self.move_chassis_around()
             self.move_chassis_around()
-            self.move_chassis_around()
             self.end_model2_probe = True
         else:
             logList.append("Out of Position")
@@ -415,7 +414,7 @@ class VideoCamera(object):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', canvas)
-        if self.end_model1_probe == True:
+        if self.end_model3_probe == True:
             if cv2.waitKey(5000) == 27: 
                 print("end wait key")
         else:
