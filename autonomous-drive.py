@@ -360,6 +360,7 @@ class VideoCamera(object):
 
     def move_to_rack(self):
         print("Move to Rack")
+        self.retrys = 5
         self.raise_camera()
         camera = cv2.VideoCapture(0)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
@@ -375,7 +376,7 @@ class VideoCamera(object):
         # logList.append("model 1 prediction" + str(res))
         
         if len(res["result"]["bounding_boxes"]) > 0:
-            self.retrys = 3
+            self.retrys = 5
             bb = res["result"]["bounding_boxes"][0]
             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
@@ -400,13 +401,14 @@ class VideoCamera(object):
                     print("Moving chassis left")
 
         elif self.retrys > 0:
+            self.move_chassis_left()
+            logList.append("Moving chassis left")
+            print("Moving chassis left")
             self.retrys -= 1
-        elif (self.cam_pulse < self.cam_max):
-            self.lower_camera()
         else:
-            logList.append("Unable to find shoe")
-            print("Unable to find shoe")
-            self.end_model1_probe = True
+            logList.append("Unable to find rack")
+            print("Unable to find rack")
+            self.end_model3_probe = True
 
 
         logs = np.full((800,800,3), 200, dtype=np.uint8)
