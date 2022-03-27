@@ -49,6 +49,7 @@
 - `python3 servo.py`
 - `cd robotics/pi-roboclaw-motor-controller/stacker-bot`
 - `cd robotics/stacker-bot`
+- `python3 main.py`
 - `python3 pomegranate.py`
 - Take few pictures
 - `edge-impulse-uploader ./images/*.jpg`
@@ -74,7 +75,8 @@
 - `sudo shutdown now`
 - `sudo poweroff`
 
-
+## Edge Impulse Commands
+- `edge-impulse-uploader --clean`
 
 
 

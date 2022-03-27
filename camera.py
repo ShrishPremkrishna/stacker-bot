@@ -10,7 +10,7 @@ from roboclaw import Roboclaw
 
 class VideoCamera(object):
     def __init__(self):
-        model = 'obj-det.eim'
+        model = 'sb-model-1.eim'
         dir_path = os.path.dirname(os.path.realpath(__file__))
         modelfile = os.path.join(dir_path, model)
         print('MODEL: ' + modelfile)
@@ -20,10 +20,11 @@ class VideoCamera(object):
         self.labels = model_info['model_parameters']['labels']
         self.camera = cv2.VideoCapture(0)
         
-        self.cam_pulse = 1600
+        
         self.cam_channel = 4
-        self.cam_max = 2000
-        self.cam_min = 1600
+        self.cam_max = 2800
+        self.cam_min = 2000
+        self.cam_pulse = self.cam_min
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
         print("camera pulse being initiated at " + str(self.cam_pulse))
@@ -49,11 +50,11 @@ class VideoCamera(object):
         print("lower_camera")
         print("Cam pulse at - " + str(self.cam_pulse))
         if (self.cam_pulse < self.cam_max) :
-            for i in range(self.cam_pulse, self.cam_pulse + 100, 10):  
+            for i in range(self.cam_pulse, self.cam_pulse + 200, 10):  
                 self.pwm.setServoPulse(self.cam_channel, i)   
                 time.sleep(0.02) 
             print("Cam pulse being set at - " + str(self.cam_pulse))
-            self.cam_pulse = self.cam_pulse + 100 
+            self.cam_pulse = self.cam_pulse + 200 
             return True
         else:
             return False
@@ -163,7 +164,7 @@ class VideoCamera(object):
                     logList.append("Lower camera angle")
                 else:
                     logList.append("Proximity Reached")
-                    self.cam_pulse = 1600
+                    self.cam_pulse = self.cam_min
             self.next_action = self.now() + 5
         else:
             if "bounding_boxes" in res["result"].keys():
