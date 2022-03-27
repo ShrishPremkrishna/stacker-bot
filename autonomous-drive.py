@@ -165,7 +165,7 @@ class VideoCamera(object):
         self.roboclaw.BackwardM2(0x80,self.speed)
         self.roboclaw.ForwardM1(0x81,self.speed)
         self.roboclaw.BackwardM2(0x81,self.speed)
-        time.sleep(0.35)
+        time.sleep(0.40)
         self.roboclaw.ForwardM1(0x80,0)
         self.roboclaw.ForwardM2(0x80,0)
         self.roboclaw.ForwardM1(0x81,0)
@@ -339,6 +339,7 @@ class VideoCamera(object):
             print("In Position")
             self.move_chassis_around()
             self.move_chassis_around()
+            self.move_chassis_around()
             self.end_model2_probe = True
         else:
             logList.append("Out of Position")
@@ -401,9 +402,9 @@ class VideoCamera(object):
                     print("Moving chassis left")
 
         elif self.retrys > 0:
-            self.move_chassis_left()
-            logList.append("Moving chassis left")
-            print("Moving chassis left")
+            self.rotate_chassis_left()
+            logList.append("Rotate chassis left")
+            print("Rotate chassis left")
             self.retrys -= 1
         else:
             logList.append("Unable to find rack")
