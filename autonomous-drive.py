@@ -194,7 +194,7 @@ class VideoCamera(object):
                         logList.append("Proximity Reached")
                         print("Proximity Reached")
                         self.end_model1_probe = True
-                elif(bb['y'] < 100):
+                elif(bb['y'] < 150):
                     self.move_chassis_up()
                     logList.append("Moving chassis up")
                     print("Moving chassis up")
