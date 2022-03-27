@@ -170,26 +170,21 @@ class VideoCamera(object):
 
     # Bar Lift controls
     def barlift_up(self):
-        print("On Traingle Press - lift barlift")
         print("Barlift pulse at - " + str(self.barlift_pulse))
-        if (self.barlift_pulse < self.barlift_max) :
-            for i in range(self.barlift_pulse, self.barlift_pulse + 200, 10):  
-                self.pwm.setServoPulse(self.barlift_channel, i)   
-                time.sleep(0.02) 
-            print("Barlift pulse being set at - " + str(self.barlift_pulse))
-            self.barlift_pulse = self.barlift_pulse + 200 
+        for i in range(self.barlift_pulse, self.barlift_max, 20):  
+            self.pwm.setServoPulse(self.barlift_channel, i)   
+            time.sleep(0.02) 
+        print("Barlift pulse being set at - " + str(self.barlift_pulse))
+        self.barlift_pulse = self.barlift_max 
 
     def barlift_down(self):
-        print("On X Press - lower barlift")
         print("Barlift pulse at - " + str(self.barlift_pulse))
-        if (self.barlift_pulse > self.barlift_min) :
-            print("Barlift pulse being set at - " + str(self.barlift_pulse))
-            for i in range(self.barlift_pulse, self.barlift_pulse - 200, -10):  
-                self.pwm.setServoPulse(self.barlift_channel, i)   
-                time.sleep(0.02) 
-            self.barlift_pulse = self.barlift_pulse - 200
-        if (self.barlift_pulse <= self.barlift_min + 100):
-            self.pwm.setPWM(self.barlift_channel, 0, 4096)
+        print("Barlift pulse being set at - " + str(self.barlift_pulse))
+        for i in range(self.barlift_pulse, self.barlift_min, -20):  
+            self.pwm.setServoPulse(self.barlift_channel, i)   
+            time.sleep(0.02) 
+        self.barlift_pulse = self.barlift_min
+        self.pwm.setPWM(self.barlift_channel, 0, 4096)
 
     def __del__(self):
         # self.camera.release()
@@ -239,7 +234,7 @@ class VideoCamera(object):
         ret, img = camera.read()
         cropped = self.scalein_crop_img(img)
         logList = []
-        logList.append("*** MODEL 1 *** " + str(self.frame_count))
+        logList.append("*** MODEL 1 *** ")
         logList.append("frame count --- " + str(self.frame_count))
         self.frame_count += 1
         features, cropped1 = self.runner1.get_features_from_image(cropped)
@@ -307,7 +302,7 @@ class VideoCamera(object):
         cropped = self.scalein_crop_img2(img)
         print(cropped.shape)
         logList = []
-        logList.append("*** MODEL 2 *** " + str(self.frame_count))
+        logList.append("*** MODEL 2 *** ")
         logList.append("frame count --- " + str(self.frame_count))
         self.frame_count += 1
         features, cropped1 = self.runner2.get_features_from_image(cropped)
@@ -320,6 +315,8 @@ class VideoCamera(object):
         if res["result"]["classification"]["in-position"] > res["result"]["classification"]["out-of-position"]:
             logList.append("In Position")
             print("In Position")
+            self.move_chassis_around()
+            self.move_chassis_around()
             self.move_chassis_around()
             self.end_model2_probe = True
         else:

@@ -52,6 +52,8 @@
 - `cd robotics/stacker-bot`
 - `export DISPLAY=:0`
 - `python3 autonomous-drive.py`
+- `python3 end-autonomous-drive.py`
+- `python3 rc-drive.py`
 
 - `python3 main.py`
 - `python3 pomegranate.py`
