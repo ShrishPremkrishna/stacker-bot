@@ -100,7 +100,7 @@ class VideoCamera(object):
         time.sleep(0.15)
 
     def __del__(self):
-        self.camera.release()
+        # self.camera.release()
         cv2.destroyAllWindows()
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
         if (self.runner):
@@ -171,7 +171,7 @@ class VideoCamera(object):
         # for i, log in enumerate(logList):
         #     cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         # canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
-        cv2.imshow('camera-feed', canvas)
+        cv2.imshow('camera-feed', img)
         if cv2.waitKey(3000) == 27: 
             print("wait key" + str(cv2.waitKey(1)))
         camera.release()
