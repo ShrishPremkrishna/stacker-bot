@@ -31,7 +31,7 @@ class VideoCamera(object):
         print('Connection - ' + str(self.roboclaw._port.is_open))
 
         self.cam_channel = 4
-        self.cam_max = 2800
+        self.cam_max = 2400
         self.cam_min = 2000
         self.cam_pulse = self.cam_min
         self.pwm = PCA9685(0x40, debug=False)
@@ -49,11 +49,11 @@ class VideoCamera(object):
         print("lower_camera")
         print("Cam pulse at - " + str(self.cam_pulse))
         if (self.cam_pulse < self.cam_max) :
-            for i in range(self.cam_pulse, self.cam_pulse + 200, 10):  
+            for i in range(self.cam_pulse, self.cam_pulse + 100, 10):  
                 self.pwm.setServoPulse(self.cam_channel, i)   
                 time.sleep(0.02) 
             print("Cam pulse being set at - " + str(self.cam_pulse))
-            self.cam_pulse = self.cam_pulse + 200 
+            self.cam_pulse = self.cam_pulse + 100 
             return True
         else:
             return False
@@ -169,7 +169,7 @@ class VideoCamera(object):
                     logList.append("Proximity Reached")
                     self.proximity_reached = True
                     self.cam_pulse = self.cam_min
-            self.next_action = self.now() + 5
+            self.next_action = self.now() + 1000
         else:
             if "bounding_boxes" in res["result"].keys():
                 print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
