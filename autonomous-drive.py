@@ -141,7 +141,7 @@ class VideoCamera(object):
         print(res)
         logList.append("model 1 prediction" + str(res))
         
-        if res["result"]["bounding_boxes"].len > 0:
+        if len(res["result"]["bounding_boxes"]) > 0:
             bb = res["result"]["bounding_boxes"][0]
             if (bb['label'] == 'shoe'):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
