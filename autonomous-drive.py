@@ -147,26 +147,33 @@ class VideoCamera(object):
                         if (self.cam_pulse < self.cam_max):
                             self.lower_camera()
                             logList.append("Lower camera angle")
+                            print("Lower camera angle")
                         else:
                             logList.append("Proximity Reached")
+                            print("Proximity Reached")
                             self.proximity_reached = True
                     elif(bb['y'] < 100):
                         self.move_chassis_up()
                         logList.append("Moving chassis up")
+                        print("Moving chassis up")
                         if (bb['x'] > 100):
                             self.move_chassis_right()
                             logList.append("Moving chassis right")
+                            print("Moving chassis right")
                         elif (bb['x'] < 30):
                             self.move_chassis_left()
                             logList.append("Moving chassis left")
+                            print("Moving chassis left")
                         
             
             if (not shoe_found):
                 if (self.cam_pulse < self.cam_max):
                     self.lower_camera()
                     logList.append("Lower camera angle")
+                    print("Lower camera angle")
                 else:
                     logList.append("Proximity Reached")
+                    print("Proximity Reached")
                     self.proximity_reached = True
                     self.cam_pulse = self.cam_min
             self.next_action = self.now() + 1000
@@ -184,6 +191,7 @@ class VideoCamera(object):
         cv2.imshow('camera-feed', canvas)
         if cv2.waitKey(1) == 27: 
             return
+        time.sleep(1)
 
 
 if __name__ == "__main__":
