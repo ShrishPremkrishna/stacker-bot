@@ -234,7 +234,7 @@ class VideoCamera(object):
 
     def move_to_shoe(self):
         print("Move to Shoe")
-        camera = cv2.VideoCapture(0)
+        camera = cv2.VideoCapture(1)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
         ret, img = camera.read()
         cropped = self.scalein_crop_img(img)
