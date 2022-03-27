@@ -145,7 +145,7 @@ class VideoCamera(object):
         features, cropped1 = self.runner1.get_features_from_image(cropped)
         res = self.runner1.classify(features)
         print(res)
-        logList.append("model 1 prediction" + str(res))
+        # logList.append("model 1 prediction" + str(res))
         
         if len(res["result"]["bounding_boxes"]) > 0:
             self.retrys = 3
@@ -212,7 +212,7 @@ class VideoCamera(object):
         features, cropped1 = self.runner2.get_features_from_image(cropped)
         res = self.runner2.classify(features)
         print(res)
-        logList.append("model 1 prediction" + str(res))
+        # logList.append("model 1 prediction" + str(res))
         
         if len(res["result"]["classification"]) > 0:
             print("result")
@@ -225,7 +225,7 @@ class VideoCamera(object):
         logs = np.full((480,600,3), 200, dtype=np.uint8)
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
-        canvas = np.concatenate((cropped, logs), axis=1)
+        canvas = np.concatenate((img, logs), axis=1)
         cv2.imshow('camera-feed', canvas)
         if self.end_model1_probe == True:
             if cv2.waitKey(5000) == 27: 
