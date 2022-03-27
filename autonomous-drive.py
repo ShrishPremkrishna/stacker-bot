@@ -10,14 +10,18 @@ from roboclaw import Roboclaw
 
 class VideoCamera(object):
     def __init__(self):
-        model = 'sb-model-1.eim'
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        modelfile = os.path.join(dir_path, model)
-        print('MODEL: ' + modelfile)
-        self.runner = ImageImpulseRunner(modelfile)
-        model_info = self.runner.init()
-        print('Loaded runner for "' + model_info['project']['owner'] + ' / ' + model_info['project']['name'] + '"')
-        self.labels = model_info['model_parameters']['labels']
+
+        modelfile1 = os.path.join(dir_path, 'sb-model-1.eim')
+        self.runner1 = ImageImpulseRunner(modelfile1)
+        model_info1 = self.runner1.init()
+        print('Loaded runner1 for "' + model_info1['project']['owner'] + ' / ' + model_info1['project']['name'] + '"')
+        
+        modelfile2= os.path.join(dir_path, 'sb-model-1.eim')
+        self.runner1 = ImageImpulseRunner(modelfile2)
+        model_info2 = self.runner1.init()
+        print('Loaded runner2 for "' + model_info2['project']['owner'] + ' / ' + model_info2['project']['name'] + '"')
+
         # self.camera = cv2.VideoCapture(0)
         
         self.speed = 20
@@ -104,8 +108,10 @@ class VideoCamera(object):
         # self.camera.release()
         cv2.destroyAllWindows()
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
-        if (self.runner):
-            self.runner.stop()
+        if (self.runner1):
+            self.runner1.stop()
+        if (self.runner2):
+            self.runner2.stop()
 
     def scalein_crop_img(self, img):
         scale_percent = 67 
@@ -131,8 +137,8 @@ class VideoCamera(object):
         logList = []
         logList.append("frame count" + str(self.frame_count))
         self.frame_count += 1
-        features, cropped1 = self.runner.get_features_from_image(cropped)
-        res = self.runner.classify(features)
+        features, cropped1 = self.runner1.get_features_from_image(cropped)
+        res = self.runner1.classify(features)
         print(res)
         logList.append("model 1 prediction" + str(res))
         
@@ -188,6 +194,7 @@ class VideoCamera(object):
 
     def move_around_shoe(self):
         print("Move around Shoe")
+        self.pwm.setServoPulse(self.cam_channel, self.cam_max)
         camera = cv2.VideoCapture(0)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
         ret, img = camera.read()
@@ -195,21 +202,17 @@ class VideoCamera(object):
         logList = []
         logList.append("frame count" + str(self.frame_count))
         self.frame_count += 1
-        features, cropped1 = self.runner.get_features_from_image(cropped)
-        res = self.runner.classify(features)
+        features, cropped1 = self.runner2.get_features_from_image(cropped)
+        res = self.runner2.classify(features)
         print(res)
         logList.append("model 1 prediction" + str(res))
         
-        if len(res["result"]) > 0:
+        if len(res["result"]["classification"]) > 0:
             print("result")
-        elif self.retrys > 0:
-            self.retrys -= 1
-        elif (self.cam_pulse < self.cam_max):
-            self.lower_camera()
         else:
-            logList.append("Unable to find shoe")
-            print("Unable to find shoe")
-            self.end_model1_probe = True
+            logList.append("Unable to get position")
+            print("Unable to get position")
+            self.end_model2_probe = True
 
 
         logs = np.full((800,800,3), 200, dtype=np.uint8)

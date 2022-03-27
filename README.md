@@ -48,8 +48,11 @@
 - `cd robotics/pi-roboclaw-motor-controller/servo/maker-focus`
 - `python3 servo.py`
 - `cd robotics/pi-roboclaw-motor-controller/stacker-bot`
+
 - `cd robotics/stacker-bot`
+- `export DISPLAY=:0`
 - `python3 autonomous-drive.py`
+
 - `python3 main.py`
 - `python3 pomegranate.py`
 - Take few pictures
@@ -77,6 +80,8 @@
 - `sudo poweroff`
 
 ## Edge Impulse Commands
+- `edge-impulse-linux --disable-microphone`
+- `edge-impulse-linux-runner --download sb-model-2.eim`
 - `edge-impulse-uploader --clean`
 
 
