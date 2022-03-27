@@ -131,23 +131,44 @@ class VideoCamera(object):
         print(cropped.shape)
         features, cropped1 = self.runner.get_features_from_image(cropped)
         res = self.runner.classify(features)
-        # print(res)
+        logList = []
+        print(res)
+        logList.append("model 1 prediction" + str(res))
+        logList.append("frame count" + str(self.frame_count))
         if "bounding_boxes" in res["result"].keys():
             bb = res["result"]["bounding_boxes"][0]
-            if (bb['label'] == 'shoe'):
-                cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-                cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-        
-        logList = []
-        logList.append("Lower camera angle")
+            if(bb['y'] > 100):
+                if (self.cam_pulse < self.cam_max):
+                    self.lower_camera()
+                    logList.append("Lower camera angle")
+                    print("Lower camera angle")
+                else:
+                    logList.append("Proximity Reached")
+                    print("Proximity Reached")
+                    self.proximity_reached = True
+            elif(bb['y'] < 100):
+                self.move_chassis_up()
+                logList.append("Moving chassis up")
+                print("Moving chassis up")
+                if (bb['x'] > 100):
+                    self.move_chassis_right()
+                    logList.append("Moving chassis right")
+                    print("Moving chassis right")
+                elif (bb['x'] < 30):
+                    self.move_chassis_left()
+                    logList.append("Moving chassis left")
+                    print("Moving chassis left")
         logs = np.full((800,800,3), 200, dtype=np.uint8)
-        logList.append("frame count" + str(self.frame_count))
         self.frame_count += 1
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', canvas)
-        time.sleep(100)
+        if cv2.waitKey(1) == 27: 
+            print("wait key" + str(cv2.waitKey(1)))
+
+
+                
 
         # if (self.next_action < self.now()):
         #     shoe_found = False
