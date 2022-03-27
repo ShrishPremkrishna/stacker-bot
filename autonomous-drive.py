@@ -125,6 +125,7 @@ class VideoCamera(object):
         print("Getting frame")
         time.sleep(0.1)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+        img = None
         ret, img = self.camera.read()
         print(img.shape)
         cropped = self.scalein_crop_img(img)
