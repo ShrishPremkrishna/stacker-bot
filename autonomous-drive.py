@@ -343,16 +343,16 @@ class VideoCamera(object):
 if __name__ == "__main__":
 
     sbot = VideoCamera()
+    sbot.linearslide_up(2.5)    
+    while(sbot.end_model1_probe == False):
+        frame = sbot.move_to_shoe()
+    while(sbot.end_model2_probe == False):
+        frame = sbot.move_around_shoe()
+    sbot.linearslide_down(2.5)
+    sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
+    sbot.linearslide_up(7)
+    sbot.barlift_up()
     del sbot
-    # sbot.linearslide_up(2.5)    
-    # while(sbot.end_model1_probe == False):
-    #     frame = sbot.move_to_shoe()
-    # while(sbot.end_model2_probe == False):
-    #     frame = sbot.move_around_shoe()
-    # sbot.linearslide_down(2.5)
-    # sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
-    # sbot.linearslide_up(7)
-    # sbot.barlift_up()
 
 
 
