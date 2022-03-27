@@ -37,7 +37,7 @@ class VideoCamera(object):
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
         print("camera pulse being initiated at " + str(self.cam_pulse))
-        self.pwm.setPWM(self.cam_channel, self.cam_pulse)
+        self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
 
         self.next_action = self.now() + 1000
         self.proximity_reached = False
