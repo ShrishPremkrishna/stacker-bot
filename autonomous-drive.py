@@ -39,7 +39,7 @@ class VideoCamera(object):
         print("camera pulse being initiated at " + str(self.cam_pulse))
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
 
-        self.next_action = self.now() + 1000
+        self.next_action = self.now() 
         self.proximity_reached = False
 
     def now(self):
