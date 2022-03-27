@@ -18,7 +18,7 @@ class VideoCamera(object):
         model_info = self.runner.init()
         print('Loaded runner for "' + model_info['project']['owner'] + ' / ' + model_info['project']['name'] + '"')
         self.labels = model_info['model_parameters']['labels']
-        self.camera = cv2.VideoCapture(0)
+        # self.camera = cv2.VideoCapture(0)
         
         self.speed = 20
         self.Lspeed = 35
@@ -123,57 +123,58 @@ class VideoCamera(object):
 
     def get_frame(self):
         print("Getting frame")
-        time.sleep(0.1)
+        camera = cv2.VideoCapture(0)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
         img = None
-        ret, img = self.camera.read()
-        print(img.shape)
-        cropped = self.scalein_crop_img(img)
-        print(cropped.shape)
+        ret, img = camera.read()
+        # print(img.shape)
+        # cropped = self.scalein_crop_img(img)
+        # print(cropped.shape)
 
-        logList = []
-        logList.append("frame count" + str(self.frame_count))
-        self.frame_count += 1
+        # logList = []
+        # logList.append("frame count" + str(self.frame_count))
+        # self.frame_count += 1
 
-        features, cropped1 = self.runner.get_features_from_image(cropped)
-        res = self.runner.classify(features)
-        print(res)
-        logList.append("model 1 prediction" + str(res))
+        # features, cropped1 = self.runner.get_features_from_image(cropped)
+        # res = self.runner.classify(features)
+        # print(res)
+        # logList.append("model 1 prediction" + str(res))
         
-        if "bounding_boxes" in res["result"].keys():
-            bb = res["result"]["bounding_boxes"][0]
-            if (bb['label'] == 'shoe'):
-                cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-                cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-                if(bb['y'] > 100):
-                    if (self.cam_pulse < self.cam_max):
-                        self.lower_camera()
-                        logList.append("Lower camera angle")
-                        print("Lower camera angle")
-                    else:
-                        logList.append("Proximity Reached")
-                        print("Proximity Reached")
-                        self.proximity_reached = True
-                elif(bb['y'] < 100):
-                    self.move_chassis_up()
-                    logList.append("Moving chassis up")
-                    print("Moving chassis up")
-                    if (bb['x'] > 100):
-                        self.move_chassis_right()
-                        logList.append("Moving chassis right")
-                        print("Moving chassis right")
-                    elif (bb['x'] < 30):
-                        self.move_chassis_left()
-                        logList.append("Moving chassis left")
-                        print("Moving chassis left")
+        # if "bounding_boxes" in res["result"].keys():
+        #     bb = res["result"]["bounding_boxes"][0]
+        #     if (bb['label'] == 'shoe'):
+        #         cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
+        #         cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        #         if(bb['y'] > 100):
+        #             if (self.cam_pulse < self.cam_max):
+        #                 self.lower_camera()
+        #                 logList.append("Lower camera angle")
+        #                 print("Lower camera angle")
+        #             else:
+        #                 logList.append("Proximity Reached")
+        #                 print("Proximity Reached")
+        #                 self.proximity_reached = True
+        #         elif(bb['y'] < 100):
+        #             self.move_chassis_up()
+        #             logList.append("Moving chassis up")
+        #             print("Moving chassis up")
+        #             if (bb['x'] > 100):
+        #                 self.move_chassis_right()
+        #                 logList.append("Moving chassis right")
+        #                 print("Moving chassis right")
+        #             elif (bb['x'] < 30):
+        #                 self.move_chassis_left()
+        #                 logList.append("Moving chassis left")
+        #                 print("Moving chassis left")
 
-        logs = np.full((800,800,3), 200, dtype=np.uint8)
-        for i, log in enumerate(logList):
-            cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
-        canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
+        # logs = np.full((800,800,3), 200, dtype=np.uint8)
+        # for i, log in enumerate(logList):
+        #     cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
+        # canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', canvas)
         if cv2.waitKey(3000) == 27: 
             print("wait key" + str(cv2.waitKey(1)))
+        camera.release()
 
 
                 
