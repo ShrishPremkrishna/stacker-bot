@@ -19,7 +19,7 @@ class VideoCamera(object):
         
         modelfile2= os.path.join(dir_path, 'sb-model-2a.eim')
         self.runner2 = ImageImpulseRunner(modelfile2)
-        model_info2 = self.runner1.init()
+        model_info2 = self.runner2.init()
         print('Loaded runner2 for "' + model_info2['project']['owner'] + ' / ' + model_info2['project']['name'] + '"')
 
         # self.camera = cv2.VideoCapture(0)
