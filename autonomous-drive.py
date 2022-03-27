@@ -104,6 +104,28 @@ class VideoCamera(object):
         self.roboclaw.ForwardM2(0x81,0)
         time.sleep(0.15)
 
+    def move_chassis_around(self):
+        self.roboclaw.ForwardM1(0x80,self.speed)
+        self.roboclaw.BackwardM2(0x80,self.speed)
+        self.roboclaw.BackwardM1(0x81,self.speed)
+        self.roboclaw.ForwardM2(0x81,self.speed)
+        time.sleep(0.35)
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.15)
+        self.roboclaw.ForwardM1(0x80,self.speed)
+        self.roboclaw.BackwardM2(0x80,self.speed)
+        self.roboclaw.ForwardM1(0x81,self.speed)
+        self.roboclaw.BackwardM2(0x81,self.speed)
+        time.sleep(0.35)
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.15)
+
     def __del__(self):
         # self.camera.release()
         cv2.destroyAllWindows()
@@ -213,21 +235,24 @@ class VideoCamera(object):
         res = self.runner2.classify(features)
         print(res)
         # logList.append("model 1 prediction" + str(res))
+        logList.append("In Position Probalility" + str(res["result"]["classification"]["in-position"]))
+        logList.append("Out Position Probalility" + str(res["result"]["classification"]["out-of-position"]))
         
-        if len(res["result"]["classification"]) > 0:
-            print("result")
-        else:
-            logList.append("Unable to get position")
-            print("Unable to get position")
+        if res["result"]["classification"]["in-position"] > res["result"]["classification"]["out-of-position"]:
+            logList.append("In Position")
+            print("In Position")
             self.end_model2_probe = True
-
+        else:
+            logList.append("Out of Position")
+            print("Out of Position")
+            self.move_chassis_around()
 
         logs = np.full((480,600,3), 200, dtype=np.uint8)
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         canvas = np.concatenate((img, logs), axis=1)
         cv2.imshow('camera-feed', canvas)
-        if self.end_model1_probe == True:
+        if self.end_model2_probe == True:
             if cv2.waitKey(5000) == 27: 
                 print("end wait key")
         else:
