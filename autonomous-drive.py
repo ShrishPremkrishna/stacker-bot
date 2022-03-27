@@ -129,7 +129,7 @@ class VideoCamera(object):
     def linearslide_up(self):
         print("Linear slide Up")
         self.roboclaw.ForwardM1(0x82,self.Lspeed)
-        time.sleep(0.15)
+        time.sleep(0.50)
         self.roboclaw.ForwardM1(0x82,0)
         time.sleep(0.15)
 
@@ -137,7 +137,7 @@ class VideoCamera(object):
     def linearslide_down(self):
         print("Linear slide Down")
         self.roboclaw.BackwardM1(0x82,self.Lspeed)
-        time.sleep(0.15)
+        time.sleep(0.50)
         self.roboclaw.ForwardM1(0x82,0)
         time.sleep(0.15)
 
