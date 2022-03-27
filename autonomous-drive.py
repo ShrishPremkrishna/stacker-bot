@@ -25,7 +25,7 @@ class VideoCamera(object):
         # self.camera = cv2.VideoCapture(0)
         
         self.speed = 20
-        self.Lspeed = 20
+        self.Lspeed = 36
         self.address = 0x80
         self.roboclaw = Roboclaw("/dev/serial0", 38400)
         result = self.roboclaw.Open()
@@ -126,7 +126,7 @@ class VideoCamera(object):
         self.roboclaw.ForwardM2(0x81,0)
         time.sleep(0.15)
 
-    def linearslide_up(self, duration):
+    def linearslide_up(self):
         print("Linear slide Up")
         self.roboclaw.ForwardM1(0x82,self.Lspeed)
         time.sleep(0.15)
@@ -134,7 +134,7 @@ class VideoCamera(object):
         time.sleep(0.15)
 
         #Down
-    def linearslide_down(self, duration):
+    def linearslide_down(self):
         print("Linear slide Down")
         self.roboclaw.BackwardM1(0x82,self.Lspeed)
         time.sleep(0.15)
