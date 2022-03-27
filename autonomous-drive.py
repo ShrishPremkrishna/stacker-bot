@@ -229,12 +229,6 @@ class VideoCamera(object):
             self.runner2.stop()
 
     def scalein_crop_img(self, img):
-        # scale_percent = 67 
-        # width = int(img.shape[1] * scale_percent / 100)
-        # height = int(img.shape[0] * scale_percent / 100)
-        # dim = (width, height)
-        # resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
-        # return resized[0:320, 51:371]
         pts1 = np.float32([[0,0],[640,0],[0,480],[640,480]])
         pts2 = np.float32([[0,0],[320,0],[0,320],[320,320]])
         M = cv2.getPerspectiveTransform(pts1,pts2)
@@ -242,9 +236,6 @@ class VideoCamera(object):
         return frame
 
     def scalein_crop_img2(self, img):
-        # dim = (96, 96)
-        # resized = cv2.resize(img[0:480, 80:560], dim, interpolation = cv2.INTER_AREA)
-        # return resized
         pts1 = np.float32([[0,0],[640,0],[0,480],[640,480]])
         pts2 = np.float32([[0,0],[96,0],[0,96],[96,96]])
         M = cv2.getPerspectiveTransform(pts1,pts2)
@@ -435,20 +426,20 @@ class VideoCamera(object):
 if __name__ == "__main__":
 
     sbot = VideoCamera()
-    # sbot.linearslide_up(2.5)    
-    # while(sbot.end_model1_probe == False):
-    #     sbot.move_to_shoe()
-    # while(sbot.end_model2_probe == False):
-    #     sbot.move_around_shoe()
-    # sbot.linearslide_down(2.5)
-    # sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
-    # sbot.linearslide_up(7)
-    # sbot.barlift_up()
+    sbot.linearslide_up(2.5)    
+    while(sbot.end_model1_probe == False):
+        sbot.move_to_shoe()
+    while(sbot.end_model2_probe == False):
+        sbot.move_around_shoe()
+    sbot.linearslide_down(2.5)
+    sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
+    sbot.linearslide_up(7)
+    sbot.barlift_up()
 
     while(sbot.end_model3_probe == False):
         sbot.move_to_rack()
 
-    # sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_max)
+    sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_max)
     time.sleep(20)
     del sbot
 
