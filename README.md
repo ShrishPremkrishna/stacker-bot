@@ -49,6 +49,7 @@
 - `python3 servo.py`
 - `cd robotics/pi-roboclaw-motor-controller/stacker-bot`
 - `cd robotics/stacker-bot`
+- `python3 autonomous-drive.py`
 - `python3 main.py`
 - `python3 pomegranate.py`
 - Take few pictures

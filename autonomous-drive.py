@@ -20,17 +20,6 @@ class VideoCamera(object):
         self.labels = model_info['model_parameters']['labels']
         self.camera = cv2.VideoCapture(0)
         
-        
-        self.cam_channel = 4
-        self.cam_max = 2800
-        self.cam_min = 2000
-        self.cam_pulse = self.cam_min
-        self.pwm = PCA9685(0x40, debug=False)
-        self.pwm.setPWMFreq(50)
-        print("camera pulse being initiated at " + str(self.cam_pulse))
-        self.pwm.setPWM(self.cam_channel, 0, self.cam_pulse)
-        # self.pwm.setPWM(self.cam_channel, 0, 4096)
-
         self.speed = 20
         self.Lspeed = 35
         self.address = 0x80
@@ -40,6 +29,15 @@ class VideoCamera(object):
             print('Unable to open port')
         print('Printing connection result - ' + str(result))
         print('Connection - ' + str(self.roboclaw._port.is_open))
+
+        self.cam_channel = 4
+        self.cam_max = 2800
+        self.cam_min = 2000
+        self.cam_pulse = self.cam_min
+        self.pwm = PCA9685(0x40, debug=False)
+        self.pwm.setPWMFreq(50)
+        print("camera pulse being initiated at " + str(self.cam_pulse))
+        self.pwm.setPWM(self.cam_channel, self.cam_pulse)
 
         self.next_action = self.now() + 1000
         self.proximity_reached = False
