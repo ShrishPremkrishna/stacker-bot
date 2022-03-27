@@ -202,7 +202,7 @@ class VideoCamera(object):
                         self.move_chassis_right()
                         logList.append("Moving chassis right")
                         print("Moving chassis right")
-                    elif (bb['x'] < 30):
+                    elif (bb['x'] < 60):
                         self.move_chassis_left()
                         logList.append("Moving chassis left")
                         print("Moving chassis left")
