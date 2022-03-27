@@ -147,6 +147,9 @@ class VideoCamera(object):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', canvas)
+        if cv2.waitKey(1) == 27: 
+            print(cv2.waitKey(1), cv2.waitKey(0))
+            return
 
         # if (self.next_action < self.now()):
         #     shoe_found = False
