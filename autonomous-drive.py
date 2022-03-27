@@ -132,12 +132,21 @@ class VideoCamera(object):
         features, cropped1 = self.runner.get_features_from_image(cropped)
         res = self.runner.classify(features)
         # print(res)
-        bb = res["result"]["bounding_boxes"][0]
-        cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
-        cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        if "bounding_boxes" in res["result"].keys():
+            bb = res["result"]["bounding_boxes"][0]
+            if (bb['label'] == 'shoe'):
+                cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
+                cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
         
         logList = []
         logList.append("Lower camera angle")
+        logs = np.full((800,800,3), 200, dtype=np.uint8)
+        logList.append("frame count" + str(self.frame_count))
+        self.frame_count += 1
+        for i, log in enumerate(logList):
+            cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
+        canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
+        cv2.imshow('camera-feed', canvas)
 
         # if (self.next_action < self.now()):
         #     shoe_found = False
@@ -192,16 +201,7 @@ class VideoCamera(object):
         #             logList.append('%s (%.2f): x=%d y=%d w=%d h=%d' % (bb['label'], bb['value'], bb['x'], bb['y'], bb['width'], bb['height']))
         #             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
         #             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-        logs = np.full((800,800,3), 200, dtype=np.uint8)
-        logList.append("frame count" + str(self.frame_count))
-        self.frame_count += 1
-        for i, log in enumerate(logList):
-            cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
-        canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
-        cv2.imshow('camera-feed', canvas)
-        if cv2.waitKey(1) == 27: 
-            return
-        time.sleep(1)
+
 
 
 if __name__ == "__main__":
