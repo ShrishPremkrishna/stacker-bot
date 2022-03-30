@@ -76,6 +76,12 @@ class VideoCamera(object):
 
     def __del__(self):
         # self.camera.release()
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.15)
+        
         cv2.destroyAllWindows()
         self.pwm.setServoPulse(self.cam_channel, self.cam_max)
         self.pwm.setPWM(self.gripper_channel, 0, 4096)
