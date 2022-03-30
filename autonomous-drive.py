@@ -56,7 +56,7 @@ class VideoCamera(object):
         self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse)
         
         self.barlift_channel = 2
-        self.barlift_max = 1800
+        self.barlift_max = 2200
         self.barlift_min = 600
         self.barlift_pulse = self.barlift_min
         print("barlift pulse being initiated at " + str(self.gripper_pulse))
@@ -86,6 +86,7 @@ class VideoCamera(object):
 
     def raise_camera(self):
         print("raise_camera")
+        self.pwm.setServoPulse(self.cam_channel, 1500)
 
     def rotate_chassis_right(self):
         print("RotateRight")
