@@ -40,7 +40,7 @@ class VideoCamera(object):
         print('Connection - ' + str(self.roboclaw._port.is_open))
 
         self.cam_channel = 4
-        self.cam_max = 2300
+        self.cam_max = 2400
         self.cam_min = 2000
         self.cam_pulse = self.cam_min
         self.pwm = PCA9685(0x40, debug=False)
@@ -49,14 +49,14 @@ class VideoCamera(object):
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
         
         self.gripper_channel = 0
-        self.gripper_max = 2000
+        self.gripper_max = 2300
         self.gripper_min = 1200
         self.gripper_pulse = self.gripper_max
         print("gripper pulse being initiated at " + str(self.gripper_pulse))
         self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse)
         
         self.barlift_channel = 2
-        self.barlift_max = 2200
+        self.barlift_max = 1800
         self.barlift_min = 600
         self.barlift_pulse = self.barlift_min
         print("barlift pulse being initiated at " + str(self.gripper_pulse))
@@ -164,7 +164,7 @@ class VideoCamera(object):
         self.roboclaw.BackwardM2(0x80,self.speed)
         self.roboclaw.ForwardM1(0x81,self.speed)
         self.roboclaw.BackwardM2(0x81,self.speed)
-        time.sleep(0.30)
+        time.sleep(0.40)
         self.roboclaw.ForwardM1(0x80,0)
         self.roboclaw.ForwardM2(0x80,0)
         self.roboclaw.ForwardM1(0x81,0)
