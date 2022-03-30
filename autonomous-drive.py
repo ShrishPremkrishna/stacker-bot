@@ -49,14 +49,14 @@ class VideoCamera(object):
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
         
         self.gripper_channel = 0
-        self.gripper_max = 2000
+        self.gripper_max = 2300
         self.gripper_min = 1200
         self.gripper_pulse = self.gripper_max
         print("gripper pulse being initiated at " + str(self.gripper_pulse))
         self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse)
         
         self.barlift_channel = 2
-        self.barlift_max = 2200
+        self.barlift_max = 1800
         self.barlift_min = 600
         self.barlift_pulse = self.barlift_min
         print("barlift pulse being initiated at " + str(self.gripper_pulse))
@@ -86,6 +86,7 @@ class VideoCamera(object):
 
     def raise_camera(self):
         print("raise_camera")
+        self.pwm.setServoPulse(self.cam_channel, 1500)
 
     def rotate_chassis_right(self):
         print("RotateRight")
@@ -164,7 +165,7 @@ class VideoCamera(object):
         self.roboclaw.BackwardM2(0x80,self.speed)
         self.roboclaw.ForwardM1(0x81,self.speed)
         self.roboclaw.BackwardM2(0x81,self.speed)
-        time.sleep(0.35)
+        time.sleep(0.40)
         self.roboclaw.ForwardM1(0x80,0)
         self.roboclaw.ForwardM2(0x80,0)
         self.roboclaw.ForwardM1(0x81,0)
@@ -363,6 +364,8 @@ class VideoCamera(object):
 
     def move_to_rack(self):
         print("Move to Rack")
+        self.retrys = 5
+        self.raise_camera()
         camera = cv2.VideoCapture(0)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
         ret, img = camera.read()
@@ -377,7 +380,7 @@ class VideoCamera(object):
         # logList.append("model 1 prediction" + str(res))
         
         if len(res["result"]["bounding_boxes"]) > 0:
-            self.retrys = 3
+            self.retrys = 5
             bb = res["result"]["bounding_boxes"][0]
             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
@@ -402,13 +405,14 @@ class VideoCamera(object):
                     print("Moving chassis left")
 
         elif self.retrys > 0:
+            self.rotate_chassis_left()
+            logList.append("Rotate chassis left")
+            print("Rotate chassis left")
             self.retrys -= 1
-        elif (self.cam_pulse < self.cam_max):
-            self.lower_camera()
         else:
-            logList.append("Unable to find shoe")
-            print("Unable to find shoe")
-            self.end_model1_probe = True
+            logList.append("Unable to find rack")
+            print("Unable to find rack")
+            self.end_model3_probe = True
 
 
         logs = np.full((800,800,3), 200, dtype=np.uint8)
@@ -416,7 +420,7 @@ class VideoCamera(object):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', canvas)
-        if self.end_model1_probe == True:
+        if self.end_model3_probe == True:
             if cv2.waitKey(5000) == 27: 
                 print("end wait key")
         else:
