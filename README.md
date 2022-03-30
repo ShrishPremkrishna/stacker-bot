@@ -51,6 +51,10 @@
 ##  ###########################################
 - `cd robotics/stacker-bot`
 - `export DISPLAY=:0`
+TURN ON BATTERY
+- bring down linear slide
+- connect RC
+
 - `python3 autonomous-drive.py`
 - `python3 end-autonomous-drive.py`
 - `python3 rc-drive.py`

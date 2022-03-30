@@ -292,12 +292,15 @@ class VideoCamera(object):
                         print("Moving chassis left")
         elif self.retrys > 0:
             self.retrys -= 1
+            #Rotate left
+            self.rotate_chassis_left()
         elif (self.cam_pulse < self.cam_max):
             self.lower_camera()
         else:
             logList.append("Unable to find shoe")
             print("Unable to find shoe")
             self.end_model1_probe = True
+
 
 
         logs = np.full((800,800,3), 200, dtype=np.uint8)
