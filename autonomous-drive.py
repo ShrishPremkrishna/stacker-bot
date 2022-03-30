@@ -56,7 +56,7 @@ class VideoCamera(object):
         self.pwm.setServoPulse(self.gripper_channel, self.gripper_pulse)
         
         self.barlift_channel = 2
-        self.barlift_max = 2200
+        self.barlift_max = 2000
         self.barlift_min = 600
         self.barlift_pulse = self.barlift_min
         print("barlift pulse being initiated at " + str(self.gripper_pulse))
@@ -406,7 +406,7 @@ class VideoCamera(object):
             bb = res["result"]["bounding_boxes"][0]
             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-            if(bb['width'] * bb['height'] > 35000):
+            if(bb['width'] * bb['height'] > 40000):
                 logList.append("Proximity Reached")
                 print("Proximity Reached")
                 self.end_model3_probe = True
@@ -451,7 +451,7 @@ if __name__ == "__main__":
         sbot.move_to_shoe()
     while(sbot.end_model2_probe == False):
         sbot.move_around_shoe()
-    sbot.linearslide_down(2.5)
+    sbot.linearslide_down(2)
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
     sbot.linearslide_up(7.5)
     sbot.barlift_up()
