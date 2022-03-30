@@ -364,6 +364,8 @@ class VideoCamera(object):
 
     def move_to_rack(self):
         print("Move to Rack")
+        self.retrys = 5
+        self.raise_camera()
         camera = cv2.VideoCapture(0)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
         ret, img = camera.read()
@@ -378,11 +380,11 @@ class VideoCamera(object):
         # logList.append("model 1 prediction" + str(res))
         
         if len(res["result"]["bounding_boxes"]) > 0:
-            self.retrys = 3
+            self.retrys = 20
             bb = res["result"]["bounding_boxes"][0]
             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-            if(bb['width'] * bb['height'] > 22500):
+            if(bb['width'] * bb['height'] > 25000):
                 logList.append("Proximity Reached")
                 print("Proximity Reached")
                 self.end_model3_probe = True
@@ -394,30 +396,25 @@ class VideoCamera(object):
                     self.move_chassis_right()
                     logList.append("Moving chassis right")
                     print("Moving chassis right")
-                    self.rotate_chassis_left()
-                    logList.append("Rotate chassis left")
-                    print("Rotate chassis left")
                 elif (bb['x'] < 5):
                     self.move_chassis_left()
                     logList.append("Moving chassis left")
                     print("Moving chassis left")
-
         elif self.retrys > 0:
+            self.rotate_chassis_left()
+            logList.append("Rotate chassis left")
+            print("Rotate chassis left")
             self.retrys -= 1
-        elif (self.cam_pulse < self.cam_max):
-            self.lower_camera()
         else:
-            logList.append("Unable to find shoe")
-            print("Unable to find shoe")
-            self.end_model1_probe = True
-
-
+            logList.append("Unable to find rack")
+            print("Unable to find rack")
+            self.end_model3_probe = True
         logs = np.full((800,800,3), 200, dtype=np.uint8)
         for i, log in enumerate(logList):
             cv2.putText(logs, log, (10, (i + 1) * 30), font, 1, (10, 10, 10), 1, cv2.LINE_AA)
         canvas = np.concatenate((self.scaleout(cropped), logs), axis=1)
         cv2.imshow('camera-feed', canvas)
-        if self.end_model1_probe == True:
+        if self.end_model3_probe == True:
             if cv2.waitKey(5000) == 27: 
                 print("end wait key")
         else:
