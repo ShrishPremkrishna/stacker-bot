@@ -310,13 +310,13 @@ class VideoCamera(object):
                     logList.append("Moving chassis up")
                     print("Moving chassis up")
                     if (bb['x'] > 200):
-                        self.move_chassis_left()
-                        logList.append("Moving chassis left")
-                        print("Moving chassis left")
-                    elif (bb['x'] < 20):
                         self.move_chassis_right()
                         logList.append("Moving chassis right")
                         print("Moving chassis right")
+                    elif (bb['x'] < 20):
+                        self.move_chassis_left()
+                        logList.append("Moving chassis left")
+                        print("Moving chassis left")
         elif self.retrys > 0:
             self.retrys -= 1
         elif (self.cam_pulse < self.cam_max):
