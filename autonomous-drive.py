@@ -40,7 +40,7 @@ class VideoCamera(object):
         print('Connection - ' + str(self.roboclaw._port.is_open))
 
         self.cam_channel = 4
-        self.cam_max = 2400
+        self.cam_max = 2300
         self.cam_min = 2000
         self.cam_pulse = self.cam_min
         self.pwm = PCA9685(0x40, debug=False)
@@ -164,7 +164,7 @@ class VideoCamera(object):
         self.roboclaw.BackwardM2(0x80,self.speed)
         self.roboclaw.ForwardM1(0x81,self.speed)
         self.roboclaw.BackwardM2(0x81,self.speed)
-        time.sleep(0.35)
+        time.sleep(0.30)
         self.roboclaw.ForwardM1(0x80,0)
         self.roboclaw.ForwardM2(0x80,0)
         self.roboclaw.ForwardM1(0x81,0)
@@ -435,7 +435,7 @@ if __name__ == "__main__":
         sbot.move_around_shoe()
     sbot.linearslide_down(2.5)
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
-    sbot.linearslide_up(7)
+    sbot.linearslide_up(7.5)
     sbot.barlift_up()
 
     while(sbot.end_model3_probe == False):
