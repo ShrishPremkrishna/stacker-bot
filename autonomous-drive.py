@@ -309,14 +309,14 @@ class VideoCamera(object):
                     self.move_chassis_up()
                     logList.append("Moving chassis up")
                     print("Moving chassis up")
-                    if (bb['x'] > 100):
-                        self.move_chassis_right()
-                        logList.append("Moving chassis right")
-                        print("Moving chassis right")
-                    elif (bb['x'] < 10):
+                    if (bb['x'] > 200):
                         self.move_chassis_left()
                         logList.append("Moving chassis left")
                         print("Moving chassis left")
+                    elif (bb['x'] < 20):
+                        self.move_chassis_right()
+                        logList.append("Moving chassis right")
+                        print("Moving chassis right")
         elif self.retrys > 0:
             self.retrys -= 1
         elif (self.cam_pulse < self.cam_max):
@@ -406,7 +406,7 @@ class VideoCamera(object):
             bb = res["result"]["bounding_boxes"][0]
             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-            if(bb['width'] * bb['height'] > 40000):
+            if(bb['width'] * bb['height'] > 50000):
                 logList.append("Proximity Reached")
                 print("Proximity Reached")
                 self.end_model3_probe = True
