@@ -126,6 +126,18 @@ class VideoCamera(object):
         self.roboclaw.ForwardM2(0x81,0)
         time.sleep(0.15)
 
+    def move_chassis_down(self):
+        self.roboclaw.ForwardM1(0x80,self.speed)
+        self.roboclaw.ForwardM2(0x80,self.speed)
+        self.roboclaw.ForwardM1(0x81,self.speed)
+        self.roboclaw.ForwardM2(0x81,self.speed)
+        time.sleep(0.35)
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
+        time.sleep(0.15)
+
     def move_chassis_left(self):  
         self.roboclaw.BackwardM1(0x80,self.speed)
         self.roboclaw.ForwardM2(0x80,self.speed)
@@ -394,7 +406,7 @@ class VideoCamera(object):
             bb = res["result"]["bounding_boxes"][0]
             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-            if(bb['width'] * bb['height'] > 25000):
+            if(bb['width'] * bb['height'] > 35000):
                 logList.append("Proximity Reached")
                 print("Proximity Reached")
                 self.end_model3_probe = True
@@ -446,9 +458,14 @@ if __name__ == "__main__":
     sbot.retrys = 20
     while(sbot.end_model3_probe == False):
         sbot.move_to_rack()
-
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_max)
-    time.sleep(20)
+    time.sleep(1)
+    sbot.move_chassis_down()
+    sbot.move_chassis_down()
+    sbot.move_chassis_down()
+    sbot.move_chassis_down()
+    sbot.move_chassis_down()
+    time.sleep(5)
     del sbot
 
 
