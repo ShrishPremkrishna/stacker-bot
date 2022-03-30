@@ -86,7 +86,7 @@ class VideoCamera(object):
 
     def raise_camera(self):
         print("raise_camera")
-        self.pwm.setServoPulse(self.cam_channel, 1500)
+        self.pwm.setServoPulse(self.cam_channel, 1400)
 
     def rotate_chassis_right(self):
         print("RotateRight")
@@ -172,6 +172,15 @@ class VideoCamera(object):
         self.roboclaw.ForwardM2(0x81,0)
         time.sleep(0.15)
 
+    def stop_chassis(self):
+        self.roboclaw.ForwardM1(0x80,0)
+        self.roboclaw.ForwardM2(0x80,0)
+        self.roboclaw.ForwardM1(0x81,0)
+        self.roboclaw.ForwardM2(0x81,0)
+        self.roboclaw.ForwardM1(0x82,0)
+        self.roboclaw.ForwardM2(0x82,0)
+        time.sleep(0.15)
+
     def linearslide_up(self, duration):
         print("Linear slide Up")
         self.roboclaw.ForwardM1(0x82,self.Lspeed)
@@ -224,6 +233,7 @@ class VideoCamera(object):
     def __del__(self):
         # self.camera.release()
         cv2.destroyAllWindows()
+        self.stop_chassis()
         self.pwm.setServoPulse(self.cam_channel, self.cam_max)
         self.pwm.setPWM(self.gripper_channel, 0, 4096)
         self.barlift_down()
@@ -365,7 +375,6 @@ class VideoCamera(object):
 
     def move_to_rack(self):
         print("Move to Rack")
-        self.retrys = 5
         self.raise_camera()
         camera = cv2.VideoCapture(0)
         font = cv2.FONT_HERSHEY_COMPLEX_SMALL
@@ -381,7 +390,7 @@ class VideoCamera(object):
         # logList.append("model 1 prediction" + str(res))
         
         if len(res["result"]["bounding_boxes"]) > 0:
-            self.retrys = 20
+            self.retrys = 3
             bb = res["result"]["bounding_boxes"][0]
             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
@@ -405,7 +414,6 @@ class VideoCamera(object):
             self.rotate_chassis_left()
             logList.append("Rotate chassis left")
             print("Rotate chassis left")
-            self.retrys -= 1
         else:
             logList.append("Unable to find rack")
             print("Unable to find rack")
@@ -435,7 +443,7 @@ if __name__ == "__main__":
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
     sbot.linearslide_up(7.5)
     sbot.barlift_up()
-
+    sbot.retrys = 20
     while(sbot.end_model3_probe == False):
         sbot.move_to_rack()
 
