@@ -295,6 +295,7 @@ class VideoCamera(object):
             self.retrys -= 1
             #Rotate left
             self.rotate_chassis_left()
+            self.retrys += 1
         elif (self.cam_pulse < self.cam_max):
             self.lower_camera()
         else:
