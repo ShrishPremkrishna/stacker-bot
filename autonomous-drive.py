@@ -309,7 +309,7 @@ class VideoCamera(object):
                     self.move_chassis_up()
                     logList.append("Moving chassis up")
                     print("Moving chassis up")
-                    if (bb['x'] > 100):
+                    if (bb['x'] > 150):
                         self.move_chassis_right()
                         logList.append("Moving chassis right")
                         print("Moving chassis right")
