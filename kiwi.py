@@ -123,9 +123,11 @@ if __name__ == "__main__":
     print('Printing connection result - ' + str(result))
     print('Connection - ' + str(roboclaw._port.is_open))
 
+    linearslide_up(2.5)
+
     controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
     controller.listen(timeout=6)
 
-    linearslide_up(2.5)
+    
 
 
