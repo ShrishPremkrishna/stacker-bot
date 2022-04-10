@@ -59,7 +59,7 @@ class MyController(Controller):
         M = cv2.getPerspectiveTransform(pts1,pts2)
         frame = cv2.warpPerspective(frame,M,(96,96))
         cv2.imwrite(img_name, frame)
-        #cv2.imshow(img_name, frame)
+        cv2.imshow(img_name, frame)
         if cv2.waitKey(300) == 27: 
             print("end wait key")
         print("{} written!".format(img_name), frame.shape)
