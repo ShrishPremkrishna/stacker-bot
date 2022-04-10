@@ -25,6 +25,7 @@ class MyController(Controller):
 
         self.motorSpeed = 20
         self.motorRest = 0
+        self.lSpeed = 36
 
         
 
@@ -138,7 +139,12 @@ class MyController(Controller):
         roboclaw.BackwardM2(0x81,self.motorSpeed)
         self.stopChassis()
 
-
+    def linearslide_up(self, duration):
+        print("Linear slide Up")
+        roboclaw.ForwardM1(0x82,self.lSpeed)
+        time.sleep(duration)
+        roboclaw.ForwardM1(0x82,0)
+        time.sleep(0.15)
 
 if __name__ == "__main__":
     
@@ -157,6 +163,7 @@ if __name__ == "__main__":
     # pwm.setPWM(4, 0, 4096)
 
     controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
+    controller.linearslide_up(2.5)
     controller.listen(timeout=6)
 
 

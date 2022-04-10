@@ -102,16 +102,16 @@ class MyController(Controller):
         print("Still Picture")
         self.prepCam("out-of")
 
-def linearslide_up(self, duration):
-    print("Linear slide Up")
-    self.roboclaw.ForwardM1(0x82,self.Lspeed)
-    print("#1")
-    time.sleep(duration)
-    print("#2")
-    self.roboclaw.ForwardM1(0x82,0)
-    print("#3")
-    time.sleep(0.15)
-    print("#4")
+    def linearslide_up(self, duration):
+        print("Linear slide Up")
+        self.roboclaw.ForwardM1(0x82,self.Lspeed)
+        print("#1")
+        time.sleep(duration)
+        print("#2")
+        self.roboclaw.ForwardM1(0x82,0)
+        print("#3")
+        time.sleep(0.15)
+        print("#4")
 
 if __name__ == "__main__":
     
@@ -122,8 +122,6 @@ if __name__ == "__main__":
         print('Unable to open port')
     print('Printing connection result - ' + str(result))
     print('Connection - ' + str(roboclaw._port.is_open))
-
-    linearslide_up(2.5)
 
     controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
     controller.listen(timeout=6)
