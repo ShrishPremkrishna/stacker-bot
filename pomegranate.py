@@ -13,10 +13,11 @@ class MyController(Controller):
     def __init__(self, **kwargs):
         Controller.__init__(self, **kwargs)
 
-        self.cam_pulse = 2200
+        
         self.cam_channel = 4
-        self.cam_max = 2200
-        self.cam_min = 1800
+        self.cam_max = 2300
+        self.cam_min = 1900
+        self.cam_pulse = self.cam_max
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
         print("camera pulse being initiated at " + str(self.cam_pulse))
