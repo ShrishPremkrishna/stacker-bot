@@ -197,7 +197,7 @@ class MyController(Controller):
 
     def linearslide_up(self, duration):
         print("Linear slide Up")
-        roboclaw.ForwardM1(0x82,self.lSpeed)
+        roboclaw.ForwardM1(0x82,self.lspeed)
         time.sleep(duration)
         roboclaw.ForwardM1(0x82,0)
         time.sleep(0.15)
