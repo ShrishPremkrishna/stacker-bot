@@ -24,7 +24,7 @@ class MyController(Controller):
 
         self.motorSpeed = 20
         self.motorRest = 0
-        self.lspeed = 30
+        self.lspeed = 36
 
     def resetCamPosition (self):
         self.cam_pulse = self.cam_max
