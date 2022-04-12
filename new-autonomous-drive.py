@@ -407,8 +407,8 @@ class VideoCamera(object):
         if len(res["result"]["bounding_boxes"]) > 0:
             self.retrys = 3
             bb = res["result"]["bounding_boxes"][0]
-            cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (0, 255, 0), 2)
-            cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 255, 0), 2, cv2.LINE_AA)
+            cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (0, 255, 255), 2)
+            cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 255), 2, cv2.LINE_AA)
             rackSignArea = bb['width'] * bb['height']
             print("rackSignArea = " + str(rackSignArea))
             if(rackSignArea > 35000):
@@ -470,7 +470,7 @@ if __name__ == "__main__":
     sbot.move_chassis_down()
     sbot.move_chassis_down()
     sbot.move_chassis_down()
-    sbot.linearslide_down(11)
+    sbot.linearslide_down(9.5)
     time.sleep(5)
     del sbot
 
