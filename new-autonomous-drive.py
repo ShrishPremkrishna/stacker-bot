@@ -290,6 +290,7 @@ class VideoCamera(object):
         # logList.append("model 1 prediction" + str(res))
         
         if len(res["result"]["bounding_boxes"]) > 0:
+            self.retrys = 3
             bb = res["result"]["bounding_boxes"][0]
             if (bb['label'] == 'shoe'):
                 cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
@@ -315,6 +316,8 @@ class VideoCamera(object):
                         self.move_chassis_left()
                         logList.append("Moving chassis left")
                         print("Moving chassis left")
+        elif self.retrys > 0:
+            self.retrys -= 1
         elif (self.cam_pulse < self.cam_max):
             self.lower_camera()
         else:
@@ -359,9 +362,9 @@ class VideoCamera(object):
         if res["result"]["classification"]["in-position"] > res["result"]["classification"]["out-of-position"]:
             logList.append("In Position")
             print("In Position")
-            self.move_chassis_around()
-            self.move_chassis_around()
-            self.move_chassis_around()
+            # self.move_chassis_around()
+            # self.move_chassis_around()
+            # self.move_chassis_around()
             self.end_model2_probe = True
         else:
             logList.append("Out of Position")
@@ -398,10 +401,13 @@ class VideoCamera(object):
         # logList.append("model 1 prediction" + str(res))
         
         if len(res["result"]["bounding_boxes"]) > 0:
+            self.retrys = 3
             bb = res["result"]["bounding_boxes"][0]
             cropped = cv2.rectangle(cropped, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 2)
             cropped = cv2.putText(cropped, bb['label'], (bb['x'], bb['y'] + 25), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-            if(bb['width'] * bb['height'] > 50000):
+            rackSignArea = bb['width'] * bb['height']
+            print("rackSignArea = " + str(rackSignArea))
+            if(rackSignArea > 50000):
                 logList.append("Proximity Reached")
                 print("Proximity Reached")
                 self.end_model3_probe = True
@@ -417,6 +423,8 @@ class VideoCamera(object):
                     self.move_chassis_left()
                     logList.append("Moving chassis left")
                     print("Moving chassis left")
+        elif self.retrys > 0:
+            self.retrys -= 1
         else:
             logList.append("Unable to find rack")
             print("Unable to find rack")
