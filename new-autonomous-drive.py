@@ -454,7 +454,7 @@ if __name__ == "__main__":
     sbot.linearslide_down(2.5)
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
     sbot.barlift_up()
-    sbot.linearslide_up(7.5)
+    sbot.linearslide_up(9.5)
     while(sbot.end_model3_probe == False):
         sbot.move_to_rack()
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_max)
