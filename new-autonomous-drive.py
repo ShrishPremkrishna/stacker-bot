@@ -17,7 +17,7 @@ class VideoCamera(object):
         model_info1 = self.runner1.init()
         print('Loaded runner1 for "' + model_info1['project']['owner'] + ' / ' + model_info1['project']['name'] + '"')
         #sb-model-2b.eim
-        modelfile2= os.path.join(dir_path, 'stacker2-model2.eim')
+        modelfile2= os.path.join(dir_path, 'sb-model-2b.eim')
         self.runner2 = ImageImpulseRunner(modelfile2)
         model_info2 = self.runner2.init()
         print('Loaded runner2 for "' + model_info2['project']['owner'] + ' / ' + model_info2['project']['name'] + '"')
@@ -426,6 +426,9 @@ class VideoCamera(object):
                     print("Moving chassis left")
         elif self.retrys > 0:
             self.retrys -= 1
+            self.rotate_chassis_right()
+            logList.append("Rotate chassis right")
+            print("Rotate chassis right")
         else:
             logList.append("Unable to find rack")
             print("Unable to find rack")
