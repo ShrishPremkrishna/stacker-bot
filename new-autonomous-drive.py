@@ -66,6 +66,7 @@ class VideoCamera(object):
         self.end_model2_probe = False
         self.end_model3_probe = False
         self.frame_count = 0
+        self.retrys = 3
 
     def now(self):
         return round(time.time() * 1000)
