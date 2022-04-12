@@ -459,6 +459,7 @@ if __name__ == "__main__":
         sbot.move_around_shoe()
     sbot.linearslide_down(2)
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
+    time.sleep(0.5)
     sbot.barlift_up()
     sbot.linearslide_up(8)
     while(sbot.end_model3_probe == False):
