@@ -40,8 +40,8 @@ class VideoCamera(object):
         print('Connection - ' + str(self.roboclaw._port.is_open))
 
         self.cam_channel = 4
-        self.cam_max = 2400
-        self.cam_min = 2000
+        self.cam_max = 2200
+        self.cam_min = 1800
         self.cam_pulse = self.cam_min
         self.pwm = PCA9685(0x40, debug=False)
         self.pwm.setPWMFreq(50)
