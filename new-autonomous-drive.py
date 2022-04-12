@@ -363,7 +363,7 @@ class VideoCamera(object):
         if res["result"]["classification"]["in-position"] > res["result"]["classification"]["out-of-position"]:
             logList.append("In Position")
             print("In Position")
-            # self.move_chassis_around()
+            self.move_chassis_around()
             # self.move_chassis_around()
             # self.move_chassis_around()
             self.end_model2_probe = True
