@@ -302,6 +302,9 @@ class VideoCamera(object):
                         logList.append("Lower camera angle")
                         print("Lower camera angle")
                     else:
+                        self.move_chassis_up()
+                        logList.append("Moving chassis up")
+                        print("Moving chassis up")
                         logList.append("Proximity Reached")
                         print("Proximity Reached")
                         self.end_model1_probe = True
