@@ -457,7 +457,7 @@ if __name__ == "__main__":
         sbot.move_to_shoe()
     while(sbot.end_model2_probe == False):
         sbot.move_around_shoe()
-    sbot.linearslide_down(2)
+    sbot.linearslide_down(1.5)
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
     sbot.barlift_up()
     sbot.linearslide_up(8.5)
@@ -472,7 +472,7 @@ if __name__ == "__main__":
     sbot.move_chassis_down()
     sbot.move_chassis_down()
     sbot.move_chassis_down()
-    sbot.linearslide_down(8.5)
+    sbot.linearslide_down(7)
     time.sleep(5)
     del sbot
 
