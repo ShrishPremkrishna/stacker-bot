@@ -470,6 +470,8 @@ if __name__ == "__main__":
     sbot.move_chassis_down()
     sbot.move_chassis_down()
     sbot.move_chassis_down()
+    sbot.move_chassis_down()
+    sbot.move_chassis_down()
     sbot.linearslide_down(9.5)
     time.sleep(5)
     del sbot
