@@ -49,7 +49,7 @@ class VideoCamera(object):
         self.pwm.setServoPulse(self.cam_channel, self.cam_pulse)
         
         self.gripper_channel = 0
-        self.gripper_max = 2300
+        self.gripper_max = 2400
         self.gripper_min = 1200
         self.gripper_pulse = self.gripper_max
         print("gripper pulse being initiated at " + str(self.gripper_pulse))
@@ -460,7 +460,7 @@ if __name__ == "__main__":
     sbot.linearslide_down(2.5)
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_min)
     sbot.barlift_up()
-    sbot.linearslide_up(9.5)
+    sbot.linearslide_up(8.5)
     while(sbot.end_model3_probe == False):
         sbot.move_to_rack()
     sbot.pwm.setServoPulse(sbot.gripper_channel, sbot.gripper_max)
@@ -470,6 +470,7 @@ if __name__ == "__main__":
     sbot.move_chassis_down()
     sbot.move_chassis_down()
     sbot.move_chassis_down()
+    sbot.linearslide_down(11)
     time.sleep(5)
     del sbot
 
